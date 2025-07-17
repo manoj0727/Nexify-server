@@ -85,189 +85,217 @@ const SignUpNew = () => {
   };
 
   return (
-    <section className="bg-white">
-      <div className="container mx-auto flex min-h-screen items-center justify-center px-6">
-        <form className="w-full max-w-md" onSubmit={handleSubmit}>
-          <div className="mx-auto flex justify-center">
-            <img className="h-7 w-auto sm:h-8" src={Logo} alt="" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <div className="flex min-h-screen">
+        {/* Left Side - Image/Pattern */}
+        <div className="hidden lg:block lg:w-1/2 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500"></div>
+          <div className="absolute inset-0 bg-black opacity-10"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="max-w-md text-center px-8">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Join our community
+              </h2>
+              <p className="text-xl text-blue-100">
+                Create an account to connect, share, and grow with Nexify
+              </p>
+            </div>
           </div>
-          {signUpError &&
-            Array.isArray(signUpError) &&
-            signUpError.map((err, i) => (
-              <div
-                className="mt-6 flex items-center rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
-                role="alert"
-                key={i}
-              >
-                <span className="ml-2 block sm:inline">{err}</span>
-                <button
-                  className="ml-auto font-bold text-red-700"
-                  onClick={handleClearError}
+          {/* Pattern overlay */}
+          <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+            <defs>
+              <pattern id="pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="1" fill="white" fillOpacity="0.1" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#pattern)" />
+          </svg>
+        </div>
+
+        {/* Right Side - Form */}
+        <div className="flex w-full items-center justify-center px-6 lg:w-1/2">
+          <div className="w-full max-w-md">
+            <div className="text-center">
+              <img className="mx-auto h-12 w-auto" src={Logo} alt="Nexify" />
+              <h2 className="mt-6 text-3xl font-bold text-gray-900">
+                Create your account
+              </h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Join Nexify and start connecting today
+              </p>
+            </div>
+
+            {signUpError &&
+              Array.isArray(signUpError) &&
+              signUpError.map((err, i) => (
+                <div
+                  className="mt-6 relative rounded-lg bg-red-50 border border-red-200 p-4"
+                  key={i}
                 >
-                  <RxCross1 className="h-3 w-3" />
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <p className="text-sm text-red-700">{err}</p>
+                    </div>
+                    <button
+                      className="ml-auto text-red-400 hover:text-red-500"
+                      onClick={handleClearError}
+                    >
+                      <RxCross1 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit} autoComplete="off">
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Username
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={name}
+                      onChange={handleNameChange}
+                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
+                      placeholder="Choose a username"
+                      required
+                      autoComplete="new-password"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Email address
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <input
+                      id="email"
+                      name="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      type="email"
+                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
+                      placeholder="Enter your email"
+                      required
+                      autoComplete="new-password"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
+                      placeholder="Create a password"
+                      required
+                      autoComplete="new-password"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 mb-2">
+                    Profile Photo (Optional)
+                  </label>
+                  <label
+                    htmlFor="avatar"
+                    className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition duration-150"
+                  >
+                    <div className="text-center">
+                      <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="mt-2 text-sm text-gray-600">
+                        {avatar ? avatar.name : "Click to upload profile photo"}
+                      </p>
+                      <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                    </div>
+                    <input
+                      id="avatar"
+                      type="file"
+                      className="hidden"
+                      name="avatar"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      autoComplete="off"
+                    />
+                  </label>
+                  {avatarError && (
+                    <p className="mt-2 text-sm text-red-600">{avatarError}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ${
+                    loading ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
+                >
+                  {loading ? (
+                    <ButtonLoadingSpinner loadingText={loadingText} />
+                  ) : (
+                    "Sign up"
+                  )}
                 </button>
               </div>
-            ))}
 
-          <div className="mt-6 flex items-center justify-center">
-            <Link
-              to={"/signin"}
-              className="w-1/3 border-b border-gray-400 pb-4 text-center font-medium text-gray-800"
-            >
-              Sign In
-            </Link>
-            <Link
-              to={"/signup"}
-              className="text-cente w-1/3 border-b-2 border-blue-500 pb-4 font-medium text-gray-800"
-            >
-              Sign Up
-            </Link>
+              <div className="text-center">
+                <span className="text-sm text-gray-600">
+                  Already have an account?{" "}
+                  <Link to="/signin" className="font-medium text-blue-600 hover:text-blue-500">
+                    Sign in
+                  </Link>
+                </span>
+              </div>
+            </form>
           </div>
-          <div className="relative mt-8 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </span>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={name}
-              onChange={handleNameChange}
-              className="block w-full rounded-lg border bg-white px-11 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Username"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <label
-            htmlFor="avatar"
-            className="mx-auto mt-6 flex cursor-pointer items-center rounded-lg border-2 border-dashed bg-white px-3 py-3 text-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              />
-            </svg>
-            <h2 className="mx-3 text-gray-400">Profile Photo</h2>
-            <input
-              id="avatar"
-              type="file"
-              className="hidden"
-              name="avatar"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              autoComplete="off"
-            />
-          </label>
-          {avatar && (
-            <div className="mt-2 flex items-center justify-center">
-              <span className="font-medium text-blue-500">{avatar.name}</span>
-            </div>
-          )}
-          {avatarError && (
-            <div className="mt-2 flex items-center justify-center">
-              <span className="text-red-500">{avatarError}</span>
-            </div>
-          )}
-
-          <div className="relative mt-6 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </span>
-            <input
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleEmailChange}
-              type="email"
-              className="block w-full rounded-lg border bg-white px-11 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Email address"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div className="relative mt-4 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-            </span>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="block w-full rounded-lg border bg-white px-10 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Password"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div className="mt-6">
-            <button
-              disabled={loading}
-              type="submit"
-              className={`w-full transform rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 ${
-                loading ? "cursor-not-allowed opacity-50" : ""
-              }`}
-            >
-              {loading ? (
-                <ButtonLoadingSpinner loadingText={loadingText} />
-              ) : (
-                <span>Sign Up</span>
-              )}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

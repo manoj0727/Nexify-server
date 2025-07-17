@@ -12,8 +12,12 @@ const verifyEmailValidation = [
   query("email").isEmail().normalizeEmail(),
   query("code").isLength({ min: 5, max: 5 }).trim(),
   (req, res, next) => {
+    console.log("Raw query params:", req.query);
+    console.log("Before validation - Email:", req.query.email, "Code:", req.query.code);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log("Validation errors:", errors.array());
       return res.status(422).json({ errors: errors.array() });
     }
     console.log("After validation - Email:", req.query.email, "Code:", req.query.code);
