@@ -46,6 +46,27 @@ module.exports = {
           900: "#0000ff",
         },
       },
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-out',
+        slideIn: 'slideIn 0.3s ease-out',
+        shake: 'shake 0.3s ease-out',
+        pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          'from': { opacity: '0', transform: 'translateY(10px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideIn: {
+          'from': { opacity: '0', transform: 'translateX(-10px)' },
+          'to': { opacity: '1', transform: 'translateX(0)' },
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-5px)' },
+          '75%': { transform: 'translateX(5px)' },
+        },
+      },
     },
   },
 

@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 import { tokenMiddleware } from "../middlewares/tokenMiddleware";
 import { initializeAuth } from "./actions/authActions";
+import { initializeAdminAuth } from "./actions/adminActions";
 
 const createAppStore = async () => {
   try {
@@ -12,6 +13,7 @@ const createAppStore = async () => {
     });
 
     await store.dispatch(initializeAuth());
+    await store.dispatch(initializeAdminAuth());
 
     return store;
   } catch (err) {

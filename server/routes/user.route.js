@@ -26,7 +26,7 @@ const {
   addUserValidatorHandler,
 } = require("../middlewares/users/usersValidator");
 
-const { sendVerificationEmail } = require("../middlewares/users/verifyEmail");
+const { sendVerificationEmail, resendVerificationEmail } = require("../middlewares/users/verifyEmail");
 
 const avatarUpload = require("../middlewares/users/avatarUpload");
 const {
@@ -53,6 +53,7 @@ router.post(
   sendVerificationEmail
 );
 router.post("/refresh-token", refreshToken);
+router.post("/resend-verification", signUpSignInLimiter, resendVerificationEmail);
 router.post(
   "/signin",
   signUpSignInLimiter,
