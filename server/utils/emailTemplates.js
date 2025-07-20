@@ -2,7 +2,7 @@ const verifyEmailHTML = (name, verificationLink, verificationCode) =>
   `
 <div style="max-width: 600px; margin: auto; background-color: #f4f4f4; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgb(104, 182, 255);">
   <div style="background-color: #ffffff; padding: 20px; border-radius: 10px;">
-    <img src="/Users/manojkumawat/Nexify/client/src/assets/Nexify.png" alt="Nexify.png" style="display: block; margin: auto auto 20px;max-width: 50%;">
+    <img src="https://raw.githubusercontent.com/manoj0727/Nexify-server/main/client/src/assets/Nexify.png" alt="Nexify" style="display: block; margin: auto auto 20px;max-width: 50%;">
     <p style="font-size: 18px; margin-bottom: 20px; text-align: center; color: #4b5563; font-weight: bold;">Welcome to Nexify, ${name}!</p>
     <p style="font-size: 16px; margin-bottom: 20px; text-align: center; color: #4b5563;">Please click the button below to verify your email address and activate your account:</p>
     <div style="text-align: center; margin-bottom: 20px;">
