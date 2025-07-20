@@ -8,6 +8,7 @@
     "build": "cd client && npm ci && npm run build",
     "build:all": "npm run build",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start": "cd server && npm run production",
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",
     "install": "npm install --ignore-scripts && cd client && npm install"
