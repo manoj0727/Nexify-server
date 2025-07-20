@@ -1,7 +1,8 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "cd client && npm ci && npm run build",
   "outputDirectory": "client/build",
-  "installCommand": "npm install",
+  "installCommand": "cd client && npm install",
+  "framework": null,
   "routes": [
     {
       "src": "/static/(.*)",
