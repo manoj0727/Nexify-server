@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: nexify-client
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: client/build
+    envVars:
+      - key: NODE_VERSION
+        value: 16
