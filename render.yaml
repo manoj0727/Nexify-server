@@ -2,8 +2,51 @@ services:
   - type: web
     name: nexify-server
     env: node
+    rootDir: .
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
         value: 16
+      - key: PORT
+        value: 4000
+      - key: CLIENT_URL
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: SECRET
+        generateValue: true
+      - key: REFRESH_SECRET
+        generateValue: true
+      - key: CRYPTO_KEY
+        generateValue: true
+      - key: EMAIL
+        sync: false
+      - key: PASSWORD
+        sync: false
+      - key: EMAIL_SERVICE
+        value: Gmail
+      - key: PERSPECTIVE_API_KEY
+        sync: false
+      - key: TEXTRAZOR_API_KEY
+        sync: false
+      - key: INTERFACE_API_KEY
+        sync: false
+      - key: PERSPECTIVE_API_DISCOVERY_URL
+        value: https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1
+      - key: TEXTRAZOR_API_URL
+        value: https://api.textrazor.com/
+      - key: INTERFACE_API_URL
+        value: https://api-inference.huggingface.co/models/facebook/bart-large-mnli
+      - key: CLASSIFIER_API_URL
+        sync: false
+      - key: DEMO_EMAIL
+        value: demo@nexify.com
+      - key: DEMO_PASSWORD
+        generateValue: true
+      - key: DEMO_NAME
+        value: Demo User
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        generateValue: true
