@@ -2,7 +2,7 @@
   "name": "nexify",
   "version": "1.0.0",
   "description": "A social networking platform with automated content moderation and context-based authentication system.",
-  "main": "index.js",
+  "main": "server/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd server && npm ci && cd ../client && npm ci && npm run build",
