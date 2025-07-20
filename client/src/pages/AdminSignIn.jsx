@@ -7,6 +7,7 @@ import { signInAction } from "../redux/actions/adminActions";
 import { useDispatch, useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import * as types from "../redux/constants/adminConstants";
 
 const AdminSignIn = () => {
   const dispatch = useDispatch();
@@ -25,22 +26,26 @@ const AdminSignIn = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    setSigningIn(true);
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSigningIn(true);
     const data = {
       username: username,
       password: password,
     };
 
-    dispatch(signInAction(data)).then(() => {
-      setSigningIn(false);
+    await dispatch(signInAction(data));
+    setSigningIn(false);
+    
+    // Check if sign in was successful by checking if admin data exists in localStorage
+    const adminData = localStorage.getItem("admin");
+    if (adminData) {
       navigate("/admin");
-    });
+    }
   };
 
   const handleClearError = () => {
-    // You may need to dispatch a clear error action here
+    dispatch({ type: types.CLEAR_ADMIN_ERROR });
   };
 
   return (

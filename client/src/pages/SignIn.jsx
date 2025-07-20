@@ -34,6 +34,38 @@ const SignIn = () => {
     clearTimeout(timeout);
   };
 
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    setLoadingText("Signing in as demo user...");
+    
+    // Get demo credentials from environment variables
+    const demoEmail = process.env.REACT_APP_DEMO_EMAIL || "";
+    const demoPassword = process.env.REACT_APP_DEMO_PASSWORD || "";
+    
+    if (!demoEmail || !demoPassword) {
+      setLoading(false);
+      // Don't show demo button if credentials not configured
+      return;
+    }
+    
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    
+    const formData = new FormData();
+    formData.append("email", demoEmail);
+    formData.append("password", demoPassword);
+    
+    const timeout = setTimeout(() => {
+      setLoadingText(
+        "This is taking longer than usual. Please wait while backend services are getting started."
+      );
+    }, 5000);
+    
+    await dispatch(signInAction(formData, navigate));
+    setLoading(false);
+    clearTimeout(timeout);
+  };
+
   const signInError = useSelector((state) => state.auth?.signInError);
   const successMessage = useSelector((state) => state.auth?.successMessage);
 
@@ -156,7 +188,7 @@ const SignIn = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-3">
                 <button
                   type="submit"
                   disabled={loading}
@@ -164,12 +196,34 @@ const SignIn = () => {
                     loading ? "opacity-75 cursor-not-allowed" : ""
                   }`}
                 >
-                  {loading ? (
+                  {loading && !loadingText.includes("demo") ? (
                     <ButtonLoadingSpinner loadingText={loadingText} />
                   ) : (
                     "Sign in"
                   )}
                 </button>
+
+                {process.env.REACT_APP_DEMO_EMAIL && process.env.REACT_APP_DEMO_PASSWORD && (
+                  <button
+                    type="button"
+                    onClick={handleDemoLogin}
+                    disabled={loading}
+                    className={`w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ${
+                      loading ? "opacity-75 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    {loading && loadingText.includes("demo") ? (
+                      <ButtonLoadingSpinner loadingText={loadingText} />
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Try Demo Account
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
 
               <div className="text-center">

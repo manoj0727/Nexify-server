@@ -1,6 +1,19 @@
 import * as api from "../api/adminAPI";
 import * as types from "../constants/adminConstants";
 
+export const initializeAdminAuth = () => async (dispatch) => {
+  const adminData = localStorage.getItem("admin");
+  if (adminData) {
+    const parsed = JSON.parse(adminData);
+    if (parsed?.accessToken) {
+      dispatch({
+        type: types.SIGN_IN_SUCCESS,
+        payload: parsed
+      });
+    }
+  }
+};
+
 export const signInAction = (credential) => async (dispatch) => {
   try {
     const { error, data } = await api.signIn(credential);

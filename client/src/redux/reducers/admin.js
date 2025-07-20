@@ -145,6 +145,12 @@ const adminReducer = (state = initialState, action) => {
         ...state,
         adminPanelError: payload ? payload : null,
       };
+    case types.CLEAR_ADMIN_ERROR:
+      return {
+        ...state,
+        signInError: null,
+        adminPanelError: null,
+      };
     default:
       return state;
   }

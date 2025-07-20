@@ -12,9 +12,12 @@ const AdminSignIn = lazy(() => import("./pages/AdminSignIn"));
 
 const App = () => {
   const userData = useSelector((state) => state.auth?.userData);
-  const adminAccessToken = JSON.parse(
-    localStorage.getItem("admin")
-  )?.accessToken;
+  
+  // Check admin token on each render to make it reactive
+  const getAdminToken = () => {
+    const admin = localStorage.getItem("admin");
+    return admin ? JSON.parse(admin)?.accessToken : null;
+  };
 
   return (
     <Suspense fallback={<FallbackLoading />}>
@@ -37,14 +40,14 @@ const App = () => {
         <Route
           path="/admin/signin"
           element={
-            adminAccessToken ? <Navigate to="/admin" /> : <AdminSignIn />
+            getAdminToken() ? <Navigate to="/admin" /> : <AdminSignIn />
           }
         />
 
         <Route
           path="/admin"
           element={
-            adminAccessToken ? <AdminPanel /> : <Navigate to="/admin/signin" />
+            getAdminToken() ? <AdminPanel /> : <Navigate to="/admin/signin" />
           }
         />
       </Routes>

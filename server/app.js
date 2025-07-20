@@ -24,8 +24,16 @@ const db = new Database(process.env.MONGODB_URI, {
 
 // Connect to database before setting up routes
 db.connect()
-  .then(() => {
+  .then(async () => {
     console.log("Database connection established successfully");
+    
+    // Initialize demo user
+    const initDemoUser = require("./utils/initDemoUser");
+    await initDemoUser();
+    
+    // Initialize default admin
+    const initDefaultAdmin = require("./utils/initDefaultAdmin");
+    await initDefaultAdmin();
   })
   .catch((err) => {
     console.error("Error connecting to database:", err);

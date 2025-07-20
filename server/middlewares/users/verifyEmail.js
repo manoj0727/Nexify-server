@@ -177,8 +177,84 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
+const resendVerificationEmail = async (req, res) => {
+  const USER = process.env.EMAIL;
+  const PASS = process.env.PASSWORD;
+  const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  
+  // Normalize email to lowercase
+  const normalizedEmail = email.trim().toLowerCase();
+
+  try {
+    // Check if user already exists (already verified)
+    const existingUser = await User.findOne({ email: { $eq: normalizedEmail } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email is already verified" });
+    }
+
+    // Find pending registration to get the name
+    const pendingRegistration = await PendingRegistration.findOne({
+      email: { $eq: normalizedEmail },
+    });
+
+    if (!pendingRegistration) {
+      return res
+        .status(400)
+        .json({ message: "No pending registration found. Please sign up again." });
+    }
+
+    // Delete any existing verification codes for this email
+    await EmailVerification.deleteMany({ email: { $eq: normalizedEmail } });
+
+    // Generate new verification code
+    const verificationCode = Math.floor(10000 + Math.random() * 90000).toString();
+    const verificationLink = `${CLIENT_URL}/auth/verify?code=${verificationCode}&email=${normalizedEmail}`;
+
+    // Send email
+    let transporter = nodemailer.createTransport({
+      service: EMAIL_SERVICE,
+      auth: {
+        user: USER,
+        pass: PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    let info = await transporter.sendMail({
+      from: `"Nexify" <${USER}>`,
+      to: normalizedEmail,
+      subject: "Verify your email address",
+      html: verifyEmailHTML(pendingRegistration.name, verificationLink, verificationCode),
+    });
+
+    // Save new verification code
+    const newVerification = new EmailVerification({
+      email: normalizedEmail,
+      verificationCode,
+      messageId: info.messageId,
+      for: "signup",
+    });
+
+    await newVerification.save();
+
+    res.status(200).json({
+      message: `Verification email has been resent to ${normalizedEmail}. Please check your inbox.`,
+    });
+  } catch (err) {
+    console.error("Email resend error:", err);
+    res.status(500).json({ message: "Failed to resend verification email" });
+  }
+};
+
 module.exports = {
   sendVerificationEmail,
   verifyEmail,
   verifyEmailValidation,
+  resendVerificationEmail,
 };
