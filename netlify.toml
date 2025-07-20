@@ -1,13 +1,13 @@
 # Netlify configuration file
 [build]
-  # Directory to run the build command in
-  base = "client"
+  # Directory to run the build command in (root of monorepo)
+  base = ""
   
   # Build command - installs dependencies then builds
-  command = "npm install && npm run build"
+  command = "npm run build"
   
   # Directory that contains the deploy-ready files
-  publish = "build"
+  publish = "client/build"
 
 # Environment variables
 [build.environment]
