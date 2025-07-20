@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd client && npm install && npm run build",
+    "build": "cd client && npm ci && npm run build",
     "build:all": "npm run build",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",
-    "postinstall": "cd client && npm install"
+    "install": "npm install --ignore-scripts && cd client && npm install"
   },
   "engines": {
     "node": ">=16.0.0",
