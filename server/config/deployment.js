@@ -129,6 +129,8 @@ const getCorsOptions = () => {
     process.env.CLIENT_URL,
     'http://localhost:3000',
     'http://localhost:3001',
+    'https://nexify-server.netlify.app', // Explicitly allow Netlify URL
+    'https://nexify-client.netlify.app', // Alternative naming
   ];
 
   // Add production URLs
