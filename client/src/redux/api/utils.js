@@ -40,6 +40,22 @@ COMMUNITY_API.interceptors.request.use((req) => {
 
 export const handleApiError = async (error) => {
   try {
+    // Check if it's a network error (backend not reachable)
+    if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+      return { 
+        error: "Cannot connect to server. Please ensure the backend is running.", 
+        data: null 
+      };
+    }
+    
+    // Check if backend URL is not configured
+    if (error.config?.baseURL?.includes('your-backend-api.com')) {
+      return { 
+        error: "Backend server not configured. Please deploy the backend first.", 
+        data: null 
+      };
+    }
+    
     const errorMessage =
       error.response?.data?.message || "An unexpected error occurred.";
     const data = null;

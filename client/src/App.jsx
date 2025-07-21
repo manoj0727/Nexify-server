@@ -9,6 +9,8 @@ import SignIn from "./pages/SignIn";
 
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const AdminSignIn = lazy(() => import("./pages/AdminSignIn"));
+const Debug = lazy(() => import("./pages/Debug"));
+const HealthCheck = lazy(() => import("./pages/HealthCheck"));
 
 const App = () => {
   const userData = useSelector((state) => state.auth?.userData);
@@ -50,6 +52,9 @@ const App = () => {
             getAdminToken() ? <AdminPanel /> : <Navigate to="/admin/signin" />
           }
         />
+
+        <Route path="/debug" element={<Debug />} />
+        <Route path="/health" element={<HealthCheck />} />
       </Routes>
     </Suspense>
   );
