@@ -74,27 +74,27 @@ const MainSection = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <ul className="flex">
+    <div className="flex flex-col p-4 sm:p-6">
+      <ul className="flex border-b border-gray-200 mb-4">
         <li
           className={`${
             activeTab === "All posts"
-              ? "border-blue-500 bg-primary rounded-md text-white"
+              ? "border-blue-500 bg-primary rounded-t-md text-white"
               : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-          } flex-1 cursor-pointer text-center py-2 px-1 border-b-2 font-medium`}
+          } flex-1 cursor-pointer text-center py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors`}
           onClick={() => setActiveTab("All posts")}
         >
-          All post
+          All posts
         </li>
         <li
           className={`${
             activeTab === "You're following"
-              ? "border-blue-500 bg-primary rounded-md text-white"
+              ? "border-blue-500 bg-primary rounded-t-md text-white"
               : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-          } flex-1 cursor-pointer text-center py-2 px-1 border-b-2 font-medium`}
+          } flex-1 cursor-pointer text-center py-2 px-3 sm:px-4 border-b-2 font-medium text-sm sm:text-base transition-colors`}
           onClick={() => setActiveTab("You're following")}
         >
-          You're following
+          Following
         </li>
       </ul>
       <div className="mt-4 flex flex-col gap-4">

@@ -11,29 +11,41 @@ const UserVerification = () => {
   const [filter, setFilter] = useState("all"); // all, verified, unverified
 
   const apiUrl = process.env.REACT_APP_API_URL;
-  const adminData = useSelector((state) => state.admin?.adminData);
-  const adminToken = adminData?.token;
   
-  // Debug logging
-  console.log("Admin data:", adminData);
-  console.log("Admin token:", adminToken);
+  // Get admin token from localStorage
+  const getAdminToken = () => {
+    const adminData = localStorage.getItem("admin");
+    return adminData ? JSON.parse(adminData)?.accessToken : null;
+  };
+  
+  const adminToken = getAdminToken();
 
   const fetchUsers = useCallback(async () => {
+    if (!adminToken) {
+      console.error("No admin token available");
+      setUsers([]);
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
-      console.log("Fetching users...");
       
-      // Temporary: use test endpoint to show users without auth
-      const response = await axios.get(`${apiUrl}/test-users`);
-      console.log("Users response:", response.data);
+      // Use proper admin API to fetch all users
+      const response = await axios.get(`${apiUrl}/admin/users`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      });
+      
       setUsers(response.data.users || []);
     } catch (error) {
       console.error("Error fetching users:", error);
-      console.error("Error response:", error.response?.data);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
-  }, [apiUrl]);
+  }, [apiUrl, adminToken]);
 
   useEffect(() => {
     fetchUsers();
@@ -41,21 +53,37 @@ const UserVerification = () => {
 
   const handleVerifyUser = async (userId) => {
     try {
-      // Temporary: use test endpoint
-      await axios.post(`${apiUrl}/test-verify/${userId}`);
+      await axios.post(
+        `${apiUrl}/admin/users/${userId}/verify`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
       fetchUsers();
     } catch (error) {
       console.error("Error verifying user:", error);
+      alert("Error verifying user. Please try again.");
     }
   };
 
   const handleUnverifyUser = async (userId) => {
     try {
-      // Temporary: create unverify endpoint
-      await axios.post(`${apiUrl}/test-unverify/${userId}`);
+      await axios.post(
+        `${apiUrl}/admin/users/${userId}/unverify`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
       fetchUsers();
     } catch (error) {
       console.error("Error removing verification:", error);
+      alert("Error removing verification. Please try again.");
     }
   };
 
@@ -131,14 +159,13 @@ const UserVerification = () => {
     </div>
   );
 
-  // Temporarily disabled admin token check
-  // if (!adminToken) {
-  //   return (
-  //     <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-  //       <p>Please sign in as admin to access user verification.</p>
-  //     </div>
-  //   );
-  // }
+  if (!adminToken) {
+    return (
+      <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+        <p>Please sign in as admin to access user verification.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

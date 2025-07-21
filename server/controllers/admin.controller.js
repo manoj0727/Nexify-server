@@ -464,3 +464,62 @@ module.exports = {
   deleteModerator,
   getAllUsers,
 };
+
+// Verify a user
+const verifyUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({ 
+      message: "User verified successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified
+      }
+    });
+  } catch (error) {
+    console.error("Error verifying user:", error);
+    res.status(500).json({ message: "Error verifying user" });
+  }
+};
+
+// Unverify a user
+const unverifyUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isVerified = false;
+    await user.save();
+
+    res.status(200).json({ 
+      message: "User verification removed successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified
+      }
+    });
+  } catch (error) {
+    console.error("Error removing user verification:", error);
+    res.status(500).json({ message: "Error removing user verification" });
+  }
+};
+
+module.exports.verifyUser = verifyUser;
+module.exports.unverifyUser = unverifyUser;
