@@ -15,7 +15,7 @@ const search = async (req, res) => {
         { $text: { $search: searchQuery } },
         { score: { $meta: "textScore" } }
       )
-        .select("_id name email avatar")
+        .select("_id name email avatar isVerified role")
         .sort({ score: { $meta: "textScore" } })
         .lean(),
       Post.find({
@@ -23,7 +23,7 @@ const search = async (req, res) => {
         $text: { $search: searchQuery },
       })
         .select("_id content")
-        .populate("user", "name avatar")
+        .populate("user", "name avatar isVerified role")
         .populate("community", "name")
         .lean()
         .exec(),

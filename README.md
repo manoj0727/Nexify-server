@@ -126,10 +126,12 @@ npm start
 
 ### Configuration
 
-Run the `admin_tool.sh` script from the server directory with permissions for executing the script. This script is used for configuring the admin account, creating the initial communities, and other settings.
-```bash
-./admin_tool.sh
-``` 
+The application automatically initializes with:
+- Default admin account
+- Demo user account  
+- 10 pre-configured communities (Health & Fitness, Travel, Food & Cooking, Music, Sports, Fashion, Art & Design, Business & Entrepreneurship, Education, Programming)
+
+All communities are permanently stored in MongoDB and will be automatically created on first server startup. You can manage communities, moderators, and system settings through the admin portal at `/admin`. 
 
 #### `.env` Variables
 
@@ -157,7 +159,7 @@ If you prefer, the Flask server can be run locally as an alternative to using th
 
 ### Admin
 
-The admin dashboard can be accessed at the `/admin` route. Use the `admin_tool.sh` script to configure the admin account. The admin account can be used to manage moderators, communities, and perform other admin-related tasks. You can also enable/disable or switch API services using the admin dashboard.
+The admin dashboard can be accessed at the `/admin` route. The admin account can be used to manage moderators, communities, and perform other admin-related tasks. You can also enable/disable or switch API services using the admin dashboard.
 
 ### Moderator
 

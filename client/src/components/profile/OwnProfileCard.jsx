@@ -4,6 +4,7 @@ import { GrContactInfo } from "react-icons/gr";
 import { useState } from "react";
 import ProfileUpdateModal from "../modals/ProfileUpdateModal";
 import Tooltip from "../shared/Tooltip";
+import VerifiedBadge from "../shared/VerifiedBadge";
 
 const OwnProfileCard = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +44,19 @@ const OwnProfileCard = ({ user }) => {
           </div>
 
           <div>
-            <h2 className="mt-5 text-center text-lg font-bold">{user.name}</h2>
+            <div className="flex items-center justify-center gap-1 mt-5">
+              <h2 className={`text-center text-lg font-bold ${
+                user.role === "moderator" ? "text-red-600" : ""
+              }`}>
+                {user.name}
+              </h2>
+              {user.isVerified && <VerifiedBadge size="md" />}
+              {user.role === "moderator" && (
+                <span className="ml-1 bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-xs font-medium">
+                  MOD
+                </span>
+              )}
+            </div>
             {user.bio ? (
               <p className="flex items-center justify-center gap-2 text-gray-600">
                 <GrContactInfo className="text-gray-500" />

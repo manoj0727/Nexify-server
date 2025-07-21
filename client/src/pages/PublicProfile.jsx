@@ -14,6 +14,7 @@ import { FiUsers, FiUser, FiUserMinus, FiUserPlus } from "react-icons/fi";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import CommonLoading from "../components/loader/CommonLoading";
 import Tooltip from "../components/shared/Tooltip";
+import VerifiedBadge from "../components/shared/VerifiedBadge";
 
 const PublicProfile = () => {
   const location = useLocation();
@@ -144,15 +145,25 @@ const PublicProfile = () => {
         </div>
 
         <div>
-          <h1 className="mt-3 text-center text-lg font-bold capitalize">
-            {name}
-          </h1>
+          <div className="flex items-center justify-center gap-1 mt-3">
+            <h1 className={`text-center text-lg font-bold capitalize ${
+              role === "moderator" ? "text-red-600" : ""
+            }`}>
+              {name}
+            </h1>
+            {userProfile.isVerified && <VerifiedBadge size="md" />}
+            {role === "moderator" && (
+              <span className="ml-2 bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-xs font-medium">
+                MOD
+              </span>
+            )}
+          </div>
           <p className="ga-2 flex items-center justify-center text-center text-gray-500">
             <CiLocationOn className="text-lg" />
             {userLocation === "" ? "N/A" : userLocation}
           </p>
           {role === "moderator" ? (
-            <p className="rounded-md bg-sky-200 px-2 py-1 text-center text-sm font-semibold text-sky-700">
+            <p className="rounded-md bg-red-100 px-2 py-1 text-center text-sm font-semibold text-red-700">
               Moderator
             </p>
           ) : null}

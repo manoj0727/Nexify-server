@@ -234,6 +234,154 @@ const getModerators = async (req, res) => {
     res.status(500).json({ message: "Error retrieving moderators" });
   }
 };
+
+const createCommunity = async (req, res) => {
+  try {
+    const { name, description, banner } = req.body;
+    
+    if (!name || !description) {
+      return res.status(400).json({ message: "Name and description are required" });
+    }
+
+    const existingCommunity = await Community.findOne({ name });
+    if (existingCommunity) {
+      return res.status(400).json({ message: "Community with this name already exists" });
+    }
+
+    const newCommunity = new Community({
+      name,
+      description,
+      banner: banner || "",
+    });
+
+    await newCommunity.save();
+    res.status(201).json({ message: "Community created successfully", community: newCommunity });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating community" });
+  }
+};
+
+const updateCommunity = async (req, res) => {
+  try {
+    const { communityId } = req.params;
+    const { name, description, banner } = req.body;
+
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    if (name && name !== community.name) {
+      const existingCommunity = await Community.findOne({ name });
+      if (existingCommunity) {
+        return res.status(400).json({ message: "Community with this name already exists" });
+      }
+      community.name = name;
+    }
+
+    if (description) community.description = description;
+    if (banner !== undefined) community.banner = banner;
+
+    await community.save();
+    res.status(200).json({ message: "Community updated successfully", community });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating community" });
+  }
+};
+
+const deleteCommunity = async (req, res) => {
+  try {
+    const { communityId } = req.params;
+
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    await Community.findByIdAndDelete(communityId);
+    res.status(200).json({ message: "Community deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting community" });
+  }
+};
+
+const createModerator = async (req, res) => {
+  try {
+    const { name, username, password } = req.body;
+
+    if (!name || !username || !password) {
+      return res.status(400).json({ message: "Name, username and password are required" });
+    }
+
+    // Create special moderator email with @nexify.mod domain
+    const email = `${username}@nexify.mod`;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Moderator with this username already exists" });
+    }
+
+    // Hash password
+    const bcrypt = require("bcrypt");
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create moderator user directly (no email verification needed)
+    const newModerator = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: "moderator",
+      avatar: "https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg",
+      isEmailVerified: true, // Skip email verification for admin-created moderators
+    });
+
+    await newModerator.save();
+    
+    res.status(201).json({ 
+      message: "Moderator created successfully", 
+      moderator: {
+        _id: newModerator._id,
+        name: newModerator.name,
+        email: newModerator.email,
+        role: newModerator.role
+      }
+    });
+  } catch (error) {
+    console.error("Error creating moderator:", error);
+    res.status(500).json({ message: "Error creating moderator" });
+  }
+};
+
+const deleteModerator = async (req, res) => {
+  try {
+    const { moderatorId } = req.params;
+
+    // Find the moderator
+    const moderator = await User.findById(moderatorId);
+    if (!moderator) {
+      return res.status(404).json({ message: "Moderator not found" });
+    }
+
+    if (moderator.role !== "moderator") {
+      return res.status(400).json({ message: "User is not a moderator" });
+    }
+
+    // Remove moderator from all communities first
+    await Community.updateMany(
+      { moderators: moderatorId },
+      { $pull: { moderators: moderatorId, members: moderatorId } }
+    );
+
+    // Delete the moderator user
+    await User.findByIdAndDelete(moderatorId);
+    
+    res.status(200).json({ message: "Moderator removed successfully" });
+  } catch (error) {
+    console.error("Error removing moderator:", error);
+    res.status(500).json({ message: "Error removing moderator" });
+  }
+};
 const addModerator = async (req, res) => {
   try {
     const { communityId, moderatorId } = req.query;
@@ -285,6 +433,19 @@ const removeModerator = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select("name email avatar role isVerified verifiedBy createdAt warnings isMuted isTempBanned")
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Error fetching users" });
+  }
+};
+
 module.exports = {
   retrieveServicePreference,
   updateServicePreference,
@@ -296,4 +457,10 @@ module.exports = {
   addModerator,
   removeModerator,
   getModerators,
+  createCommunity,
+  updateCommunity,
+  deleteCommunity,
+  createModerator,
+  deleteModerator,
+  getAllUsers,
 };

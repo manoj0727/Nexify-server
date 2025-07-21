@@ -66,6 +66,58 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    
+    // Advanced User Management Fields
+    warnings: [
+      {
+        reason: { type: String, required: true },
+        issuedBy: { type: Schema.Types.ObjectId, ref: "User" },
+        issuedAt: { type: Date, default: Date.now },
+        severity: { type: String, enum: ["low", "medium", "high"], default: "medium" }
+      }
+    ],
+    isMuted: {
+      type: Boolean,
+      default: false,
+    },
+    mutedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    mutedAt: {
+      type: Date,
+    },
+    muteExpiresAt: {
+      type: Date,
+    },
+    isTempBanned: {
+      type: Boolean,
+      default: false,
+    },
+    tempBannedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    tempBanExpiresAt: {
+      type: Date,
+    },
+    tempBanReason: {
+      type: String,
+    },
+    
+    // Special Privileges
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    hasPriority: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -49,6 +49,30 @@ const communitySchema = new Schema(
         default: [],
       },
     ],
+    
+    // Community Customization & Moderation Features
+    customRules: [
+      {
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+    moderationSettings: {
+      requireApproval: { type: Boolean, default: false },
+      autoModeration: { type: Boolean, default: false },
+      allowLinks: { type: Boolean, default: true },
+      minPostLength: { type: Number, default: 0 },
+      maxPostLength: { type: Number, default: 10000 },
+      slowMode: { type: Number, default: 0 }
+    },
+    analytics: {
+      totalPosts: { type: Number, default: 0 },
+      totalComments: { type: Number, default: 0 },
+      activeMembers: { type: Number, default: 0 },
+      moderatorActions: { type: Number, default: 0 }
+    },
   },
 
   {

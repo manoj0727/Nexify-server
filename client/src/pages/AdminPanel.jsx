@@ -3,6 +3,8 @@ import Tab from "../components/admin/Tab";
 import Logs from "../components/admin/Logs";
 import Settings from "../components/admin/Settings";
 import CommunityManagement from "../components/admin/CommunityManagement";
+import ModeratorManagement from "../components/admin/ModeratorManagement";
+import UserVerification from "../components/admin/UserVerification";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutAction } from "../redux/actions/adminActions";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +33,8 @@ const AdminPanel = () => {
       {activeTab === "logs" && <Logs />}
       {activeTab === "settings" && <Settings />}
       {activeTab === "Community Management" && <CommunityManagement />}
+      {activeTab === "Moderator Management" && <ModeratorManagement />}
+      {activeTab === "User Verification" && <UserVerification />}
     </div>
   );
 };

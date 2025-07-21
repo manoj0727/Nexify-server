@@ -6,6 +6,9 @@ import {
   addModeratorAction,
   removeModeratorAction,
   getCommunityAction,
+  createCommunityAction,
+  updateCommunityAction,
+  deleteCommunityAction,
 } from "../../redux/actions/adminActions";
 
 const CommunityManagement = () => {
@@ -25,6 +28,13 @@ const CommunityManagement = () => {
   const [newModerator, setNewModerator] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isChangingCommunity, setIsChangingCommunity] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    banner: "",
+  });
 
   const handleCommunitySelect = async (community) => {
     setSelectedCommunity(community);
@@ -47,10 +57,10 @@ const CommunityManagement = () => {
       removeModeratorAction(selectedCommunityData._id, moderator._id)
     );
     await dispatch(getCommunityAction(selectedCommunityData._id));
-    await dispatch(addModeratorAction(selectedCommunityData._id, newModerator));
     await dispatch(getModeratorsAction());
     setIsUpdating(false);
   };
+
   const handleAddModerator = async () => {
     setIsUpdating(true);
     await dispatch(addModeratorAction(selectedCommunityData._id, newModerator));
@@ -58,6 +68,43 @@ const CommunityManagement = () => {
     await dispatch(getModeratorsAction());
     setNewModerator("");
     setIsUpdating(false);
+  };
+
+  const handleCreateCommunity = async (e) => {
+    e.preventDefault();
+    setIsUpdating(true);
+    await dispatch(createCommunityAction(formData));
+    setShowCreateModal(false);
+    setFormData({ name: "", description: "", banner: "" });
+    setIsUpdating(false);
+  };
+
+  const handleEditCommunity = async (e) => {
+    e.preventDefault();
+    setIsUpdating(true);
+    await dispatch(updateCommunityAction(selectedCommunityData._id, formData));
+    await dispatch(getCommunityAction(selectedCommunityData._id));
+    setShowEditModal(false);
+    setIsUpdating(false);
+  };
+
+  const handleDeleteCommunity = async () => {
+    if (window.confirm("Are you sure you want to delete this community?")) {
+      setIsUpdating(true);
+      await dispatch(deleteCommunityAction(selectedCommunityData._id));
+      setSelectedCommunity(null);
+      setSelectedCommunityData(null);
+      setIsUpdating(false);
+    }
+  };
+
+  const openEditModal = () => {
+    setFormData({
+      name: selectedCommunityData.name,
+      description: selectedCommunityData.description,
+      banner: selectedCommunityData.banner || "",
+    });
+    setShowEditModal(true);
   };
 
   if (!communities || !moderators) {
@@ -68,9 +115,15 @@ const CommunityManagement = () => {
     <div className="flex gap-2 h-[85vh] w-full mt-3 border rounded-md">
       {/* Left column */}
       <div className="flex flex-col w-full bg-white shadow-inner rounded-md border-r">
-        <h1 className="text-lg font-bold p-4 text-center border-b-2">
-          Communities
-        </h1>
+        <div className="flex justify-between items-center p-4 border-b-2">
+          <h1 className="text-lg font-bold text-center">Communities</h1>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+          >
+            Add New
+          </button>
+        </div>
         <div className="flex flex-col overflow-y-auto">
           {communities.map((community) => (
             <div
@@ -101,15 +154,37 @@ const CommunityManagement = () => {
           </div>
         ) : selectedCommunityData ? (
           <>
-            <h1 className="font-bold text-lg border-b border-black pb-1 mb-2">
-              {selectedCommunityData.name}
-            </h1>
+            <div className="flex justify-between items-start border-b border-black pb-1 mb-2">
+              <h1 className="font-bold text-lg">
+                {selectedCommunityData.name}
+              </h1>
+              <div className="flex gap-2">
+                <button
+                  onClick={openEditModal}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleDeleteCommunity}
+                  disabled={isUpdating}
+                  className={`bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm ${
+                    isUpdating ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
 
             {isUpdating && (
               <div className="bg-green-100 text-green-800 p-2 mb-4 rounded">
                 Updating...
               </div>
             )}
+            <p className="text-sm text-gray-600 mb-2">
+              {selectedCommunityData.description}
+            </p>
             <span className="text-sm">
               Total Moderators: {selectedCommunityData.moderatorCount}
             </span>
@@ -117,7 +192,7 @@ const CommunityManagement = () => {
               Total Members: {selectedCommunityData.memberCount}
             </span>
 
-            <div className="flex flex-col md:flex-row gap-5">
+            <div className="flex flex-col md:flex-row gap-5 mt-4">
               {/* Moderators list */}
               <div className="flex flex-col gap-2 w-full md:w-1/2">
                 <h2 className="font-medium mb-2">Moderators</h2>
@@ -197,6 +272,145 @@ const CommunityManagement = () => {
           </div>
         )}
       </div>
+
+      {/* Create Community Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Create New Community</h2>
+            <form onSubmit={handleCreateCommunity}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Name</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full p-2 border rounded"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Description
+                </label>
+                <textarea
+                  required
+                  className="w-full p-2 border rounded"
+                  rows="3"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Banner URL (Optional)
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={formData.banner}
+                  onChange={(e) =>
+                    setFormData({ ...formData, banner: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setFormData({ name: "", description: "", banner: "" });
+                  }}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+                    isUpdating ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Community Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Edit Community</h2>
+            <form onSubmit={handleEditCommunity}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Name</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full p-2 border rounded"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Description
+                </label>
+                <textarea
+                  required
+                  className="w-full p-2 border rounded"
+                  rows="3"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Banner URL
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={formData.banner}
+                  onChange={(e) =>
+                    setFormData({ ...formData, banner: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+                    isUpdating ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

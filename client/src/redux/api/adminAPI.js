@@ -89,3 +89,48 @@ export const removeModerator = async (communityId, moderatorId) => {
     return handleApiError(error);
   }
 };
+
+export const createCommunity = async (communityData) => {
+  try {
+    const res = await ADMIN_API.post("/communities", communityData);
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const updateCommunity = async (communityId, communityData) => {
+  try {
+    const res = await ADMIN_API.put(`/community/${communityId}`, communityData);
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const deleteCommunity = async (communityId) => {
+  try {
+    const res = await ADMIN_API.delete(`/community/${communityId}`);
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const createModerator = async (moderatorData) => {
+  try {
+    const res = await ADMIN_API.post("/moderators", moderatorData);
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const deleteModerator = async (moderatorId) => {
+  try {
+    const res = await ADMIN_API.delete(`/moderators/${moderatorId}`);
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};

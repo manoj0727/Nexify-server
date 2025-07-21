@@ -49,7 +49,7 @@ const createPost = async (req, res) => {
     const postId = savedPost._id;
 
     const post = await Post.findById(postId)
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name")
       .lean();
 
@@ -92,7 +92,7 @@ const confirmPost = async (req, res) => {
     const postId = savedPost._id;
 
     const post = await Post.findById(postId)
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name")
       .lean();
 
@@ -178,14 +178,14 @@ const getPost = async (req, res) => {
 
 const findPostById = async (postId) =>
   await Post.findById(postId)
-    .populate("user", "name avatar")
+    .populate("user", "name avatar isVerified role")
     .populate("community", "name")
     .lean();
 
 const findCommentsByPostId = async (postId) =>
   await Comment.find({ post: postId })
     .sort({ createdAt: -1 })
-    .populate("user", "name avatar")
+    .populate("user", "name avatar isVerified role")
     .lean();
 
 const formatComments = (comments) =>
@@ -219,7 +219,7 @@ const getPosts = async (req, res) => {
       .sort({
         createdAt: -1,
       })
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name")
       .skip(parseInt(skip))
       .limit(parseInt(limit))
@@ -277,7 +277,7 @@ const getCommunityPosts = async (req, res) => {
       .sort({
         createdAt: -1,
       })
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name")
       .skip(parseInt(skip))
       .limit(parseInt(limit))
@@ -330,7 +330,7 @@ const getFollowingUsersPosts = async (req, res) => {
       .sort({
         createdAt: -1,
       })
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name")
       .limit(20)
       .lean();
@@ -406,7 +406,7 @@ const likePost = async (req, res) => {
         new: true,
       }
     )
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name");
 
     if (!updatedPost) {
@@ -444,7 +444,7 @@ const unlikePost = async (req, res) => {
         new: true,
       }
     )
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name");
 
     if (!updatedPost) {
@@ -581,7 +581,7 @@ const getSavedPosts = async (req, res) => {
       community: { $in: communityIds },
       _id: { $in: user.savedPosts },
     })
-      .populate("user", "name avatar")
+      .populate("user", "name avatar isVerified role")
       .populate("community", "name");
 
     const formattedPosts = savedPosts.map((post) => ({
@@ -628,7 +628,7 @@ const getPublicPosts = async (req, res) => {
       community: { $in: commonCommunityIds },
       user: publicUserId,
     })
-      .populate("user", "_id name avatar")
+      .populate("user", "_id name avatar isVerified role")
       .populate("community", "_id name")
       .sort("-createdAt")
       .limit(10)

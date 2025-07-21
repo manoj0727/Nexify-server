@@ -6,6 +6,7 @@ import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 import { BiLogOut } from "react-icons/bi";
 import { BsPeople, BsWindowStack } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdManageAccounts, MdVerified } from "react-icons/md";
 
 const Tab = ({ activeTab, handleTabClick }) => {
   const navigate = useNavigate();
@@ -60,6 +61,32 @@ const Tab = ({ activeTab, handleTabClick }) => {
           >
             <BsPeople className="mr-1" />
             Community Management
+          </span>
+        </li>
+        <li className="mr-2 flex items-center">
+          <span
+            className={`cursor-pointer inline-flex items-center px-2 py-2 border-b-2 rounded-t-lg ${
+              activeTab === "Moderator Management"
+                ? "border-blue-500 bg-primary rounded-md text-white"
+                : "border-transparent hover:text-gray-600 hover:border-gray-300"
+            }`}
+            onClick={() => handleTabClick("Moderator Management")}
+          >
+            <MdManageAccounts className="mr-1" />
+            Moderator Management
+          </span>
+        </li>
+        <li className="mr-2 flex items-center">
+          <span
+            className={`cursor-pointer inline-flex items-center px-2 py-2 border-b-2 rounded-t-lg ${
+              activeTab === "User Verification"
+                ? "border-blue-500 bg-primary rounded-md text-white"
+                : "border-transparent hover:text-gray-600 hover:border-gray-300"
+            }`}
+            onClick={() => handleTabClick("User Verification")}
+          >
+            <MdVerified className="mr-1" />
+            User Verification
           </span>
         </li>
         <li className="mr-2 flex items-center">

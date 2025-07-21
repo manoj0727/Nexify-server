@@ -10,6 +10,7 @@ import DeleteModal from "../modals/DeleteModal";
 import Like from "./Like";
 import "react-photo-view/dist/react-photo-view.css";
 import Tooltip from "../shared/Tooltip";
+import VerifiedBadge from "../shared/VerifiedBadge";
 
 const Post = ({ post }) => {
   const navigate = useNavigate();
@@ -35,18 +36,26 @@ const Post = ({ post }) => {
             loading="lazy"
           />
           <div className="flex flex-col">
-            {userData._id === user._id ? (
-              <Link to="/profile" className="font-semibold text-lg capitalize">
-                {user.name}
-              </Link>
-            ) : (
-              <Link
-                to={`/user/${user._id}`}
-                className="font-semibold text-lg capitalize"
-              >
-                {user.name}
-              </Link>
-            )}
+            <div className="flex items-center gap-1">
+              {userData._id === user._id ? (
+                <Link to="/profile" className={`font-semibold text-lg capitalize ${user.role === "moderator" ? "text-red-600" : ""}`}>
+                  {user.name}
+                </Link>
+              ) : (
+                <Link
+                  to={`/user/${user._id}`}
+                  className={`font-semibold text-lg capitalize ${user.role === "moderator" ? "text-red-600" : ""}`}
+                >
+                  {user.name}
+                </Link>
+              )}
+              {user.isVerified && <VerifiedBadge size="sm" />}
+              {user.role === "moderator" && (
+                <span className="ml-1 bg-red-100 text-red-800 px-1.5 py-0.5 rounded-full text-xs font-medium">
+                  MOD
+                </span>
+              )}
+            </div>
             <Link
               to={`/community/${community.name}`}
               className="text-sm text-gray-500"

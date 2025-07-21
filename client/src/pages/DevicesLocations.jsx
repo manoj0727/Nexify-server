@@ -44,15 +44,24 @@ const DevicesLocations = () => {
     );
   }
 
-  if (!userPreferences || !contextAuthData) {
+  if (!userPreferences || (userPreferences && !userPreferences.enableContextBasedAuth)) {
     return (
       <div className="bg-white border p-5 text-gray-700 text-center main-section">
         <p className="text-lg font-semibold mb-4">
           Context-based authentication is currently disabled for your account.
         </p>
-        <p className="text-sm">
+        <p className="text-sm mb-6">
           By enabling context-based authentication, you will gain control over
           your devices, their locations, and manage trusted and blocked devices.
+        </p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Refresh to Enable
+        </button>
+        <p className="text-xs text-gray-500 mt-2">
+          Context-based authentication has been enabled for your account. Click refresh to see your devices and locations.
         </p>
       </div>
     );
