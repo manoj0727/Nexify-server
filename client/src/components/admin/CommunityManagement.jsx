@@ -275,8 +275,8 @@ const CommunityManagement = () => {
 
       {/* Create Community Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Create New Community</h2>
             <form onSubmit={handleCreateCommunity}>
               <div className="mb-4">
@@ -325,14 +325,14 @@ const CommunityManagement = () => {
                     setShowCreateModal(false);
                     setFormData({ name: "", description: "", banner: "" });
                   }}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm transition-colors ${
                     isUpdating ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
@@ -346,8 +346,8 @@ const CommunityManagement = () => {
 
       {/* Edit Community Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Edit Community</h2>
             <form onSubmit={handleEditCommunity}>
               <div className="mb-4">
@@ -393,14 +393,14 @@ const CommunityManagement = () => {
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm transition-colors ${
                     isUpdating ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Tab from "../components/admin/Tab";
+import MobileResponsiveTab from "../components/admin/MobileResponsiveTab";
 import Logs from "../components/admin/Logs";
 import Settings from "../components/admin/Settings";
 import CommunityManagement from "../components/admin/CommunityManagement";
@@ -27,14 +27,18 @@ const AdminPanel = () => {
   }, [adminPanelError, dispatch, navigate]);
 
   return (
-    <div className="pt-5 max-w-6xl mx-auto flex flex-col justify-center items-center ">
-      <Tab activeTab={activeTab} handleTabClick={handleTabClick} />
-
-      {activeTab === "logs" && <Logs />}
-      {activeTab === "settings" && <Settings />}
-      {activeTab === "Community Management" && <CommunityManagement />}
-      {activeTab === "Moderator Management" && <ModeratorManagement />}
-      {activeTab === "User Verification" && <UserVerification />}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <MobileResponsiveTab activeTab={activeTab} handleTabClick={handleTabClick} />
+        
+        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          {activeTab === "logs" && <Logs />}
+          {activeTab === "settings" && <Settings />}
+          {activeTab === "Community Management" && <CommunityManagement />}
+          {activeTab === "Moderator Management" && <ModeratorManagement />}
+          {activeTab === "User Verification" && <UserVerification />}
+        </div>
+      </div>
     </div>
   );
 };
