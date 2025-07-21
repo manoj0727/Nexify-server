@@ -8,7 +8,7 @@
   publish = "build"
 
 [build.environment]
-  REACT_APP_API_URL = "https://your-backend-api.com"
+  REACT_APP_API_URL = "https://nexify-server.onrender.com"
   REACT_APP_DEMO_EMAIL = "demo@nexify.com"
   REACT_APP_DEMO_PASSWORD = "demo123"
   REACT_APP_NODE_ENV = "production"
