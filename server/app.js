@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
 const express = require("express");
 const adminRoutes = require("./routes/admin.route");
 const userRoutes = require("./routes/user.route");
@@ -8,6 +8,7 @@ const contextAuthRoutes = require("./routes/context-auth.route");
 const search = require("./controllers/search.controller");
 const Database = require("./config/database");
 const decodeToken = require("./middlewares/auth/decodeToken");
+const { validateEnvironment, getCorsOptions, isProduction } = require("./config/deployment");
 
 const app = express();
 
@@ -16,6 +17,16 @@ const morgan = require("morgan");
 const passport = require("passport");
 
 const PORT = process.env.PORT || 4000;
+
+// Validate environment variables on startup
+try {
+  validateEnvironment();
+} catch (error) {
+  console.error("❌ Environment validation failed:", error.message);
+  if (isProduction()) {
+    process.exit(1);
+  }
+}
 
 const db = new Database(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -41,8 +52,8 @@ db.connect()
     process.exit(1);
   });
 
-app.use(cors());
-app.use(morgan("dev"));
+app.use(cors(getCorsOptions()));
+app.use(morgan(isProduction() ? "combined" : "dev"));
 app.use("/assets/userFiles", express.static(__dirname + "/assets/userFiles"));
 app.use(
   "/assets/userAvatars",
@@ -77,4 +88,9 @@ process.on("SIGINT", async () => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server up and running on port ${PORT}!`));
+app.listen(PORT, () => {
+  console.log(`Server up and running on port ${PORT}!`);
+  if (isProduction()) {
+    console.log("🚀 Running in production mode");
+  }
+});
