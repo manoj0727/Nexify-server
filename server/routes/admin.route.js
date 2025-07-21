@@ -17,6 +17,8 @@ const {
   createModerator,
   deleteModerator,
   getAllUsers,
+  verifyUser,
+  unverifyUser,
 } = require("../controllers/admin.controller");
 
 const requireAdminAuth = require("../middlewares/auth/adminAuth");
@@ -34,6 +36,9 @@ router.get("/community/:communityId", getCommunity);
 router.get("/communities", getCommunities);
 router.get("/moderators", getModerators);
 router.get("/users", getAllUsers);
+
+router.post("/users/:userId/verify", verifyUser);
+router.post("/users/:userId/unverify", unverifyUser);
 
 router.patch("/add-moderators", addModerator);
 router.patch("/remove-moderators", removeModerator);

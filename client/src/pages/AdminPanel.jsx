@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import MobileResponsiveTab from "../components/admin/MobileResponsiveTab";
-import Logs from "../components/admin/Logs";
+import ResponsiveLogs from "../components/admin/ResponsiveLogs";
 import Settings from "../components/admin/Settings";
 import CommunityManagement from "../components/admin/CommunityManagement";
 import ModeratorManagement from "../components/admin/ModeratorManagement";
@@ -32,7 +32,7 @@ const AdminPanel = () => {
         <MobileResponsiveTab activeTab={activeTab} handleTabClick={handleTabClick} />
         
         <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          {activeTab === "logs" && <Logs />}
+          {activeTab === "logs" && <ResponsiveLogs />}
           {activeTab === "settings" && <Settings />}
           {activeTab === "Community Management" && <CommunityManagement />}
           {activeTab === "Moderator Management" && <ModeratorManagement />}
