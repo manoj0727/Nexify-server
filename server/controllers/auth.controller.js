@@ -509,6 +509,53 @@ const unblockContextAuthData = async (req, res) => {
   }
 };
 
+const enableContextAuth = async (req, res) => {
+  try {
+    let userPreferences = await UserPreference.findOne({ user: req.userId });
+    
+    if (!userPreferences) {
+      // Create preferences if they don't exist
+      userPreferences = new UserPreference({
+        user: req.userId,
+        enableContextBasedAuth: true
+      });
+    } else {
+      // Update existing preferences
+      userPreferences.enableContextBasedAuth = true;
+    }
+    
+    await userPreferences.save();
+    
+    res.status(200).json({ 
+      message: "Context-based authentication enabled successfully",
+      preferences: userPreferences 
+    });
+  } catch (error) {
+    console.error("Enable context auth error:", error);
+    res.status(500).json({ 
+      message: "Error enabling context-based authentication",
+      error: error.message 
+    });
+  }
+};
+
+const createUserPreferences = async (userId) => {
+  try {
+    const existingPrefs = await UserPreference.findOne({ user: userId });
+    if (!existingPrefs) {
+      const userPreferences = new UserPreference({
+        user: userId,
+        enableContextBasedAuth: true
+      });
+      await userPreferences.save();
+      return userPreferences;
+    }
+    return existingPrefs;
+  } catch (error) {
+    console.error("Error creating user preferences:", error);
+  }
+};
+
 module.exports = {
   verifyContextData,
   addContextData,
@@ -519,5 +566,7 @@ module.exports = {
   deleteContextAuthData,
   blockContextAuthData,
   unblockContextAuthData,
+  enableContextAuth,
+  createUserPreferences,
   types,
 };

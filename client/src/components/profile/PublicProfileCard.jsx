@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { CiLocationOn } from "react-icons/ci";
+import VerifiedBadge from "../shared/VerifiedBadge";
 const PublicProfileCard = ({ user }) => {
   const followingSince = new Date(user.followingSince).toLocaleString("en-US", {
     year: "numeric",
@@ -21,7 +22,19 @@ const PublicProfileCard = ({ user }) => {
           loading="lazy"
         />
         <div>
-          <h2 className="font-bold text-base">{user.name}</h2>
+          <div className="flex items-center gap-1">
+            <h2 className={`font-bold text-base ${
+              user.role === "moderator" ? "text-red-600" : ""
+            }`}>
+              {user.name}
+            </h2>
+            {user.isVerified && <VerifiedBadge size="sm" />}
+            {user.role === "moderator" && (
+              <span className="ml-1 bg-red-100 text-red-800 px-1.5 py-0.5 rounded-full text-xs font-medium">
+                MOD
+              </span>
+            )}
+          </div>
           <p className="flex items-center gap-2">
             <CiLocationOn className="text-lg" />
             {user.location || "N/A"}

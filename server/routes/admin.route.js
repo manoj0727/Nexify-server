@@ -11,6 +11,12 @@ const {
   addModerator,
   removeModerator,
   getModerators,
+  createCommunity,
+  updateCommunity,
+  deleteCommunity,
+  createModerator,
+  deleteModerator,
+  getAllUsers,
 } = require("../controllers/admin.controller");
 
 const requireAdminAuth = require("../middlewares/auth/adminAuth");
@@ -27,9 +33,17 @@ router.use(requireAdminAuth);
 router.get("/community/:communityId", getCommunity);
 router.get("/communities", getCommunities);
 router.get("/moderators", getModerators);
+router.get("/users", getAllUsers);
 
 router.patch("/add-moderators", addModerator);
 router.patch("/remove-moderators", removeModerator);
+
+router.post("/moderators", createModerator);
+router.delete("/moderators/:moderatorId", deleteModerator);
+
+router.post("/communities", createCommunity);
+router.put("/community/:communityId", updateCommunity);
+router.delete("/community/:communityId", deleteCommunity);
 
 router
   .route("/preferences")

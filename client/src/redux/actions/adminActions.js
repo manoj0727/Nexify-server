@@ -202,3 +202,101 @@ export const removeModeratorAction =
       });
     }
   };
+
+export const createCommunityAction = (communityData) => async (dispatch) => {
+  try {
+    const { error, data } = await api.createCommunity(communityData);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({
+      type: types.CREATE_COMMUNITY_SUCCESS,
+      payload: data,
+    });
+    // Refresh communities list
+    dispatch(getCommunitiesAction());
+  } catch (error) {
+    dispatch({
+      type: types.CREATE_COMMUNITY_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const updateCommunityAction = (communityId, communityData) => async (dispatch) => {
+  try {
+    const { error, data } = await api.updateCommunity(communityId, communityData);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({
+      type: types.UPDATE_COMMUNITY_SUCCESS,
+      payload: data,
+    });
+    // Refresh communities list
+    dispatch(getCommunitiesAction());
+  } catch (error) {
+    dispatch({
+      type: types.UPDATE_COMMUNITY_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const deleteCommunityAction = (communityId) => async (dispatch) => {
+  try {
+    const { error } = await api.deleteCommunity(communityId);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({
+      type: types.DELETE_COMMUNITY_SUCCESS,
+    });
+    // Refresh communities list
+    dispatch(getCommunitiesAction());
+  } catch (error) {
+    dispatch({
+      type: types.DELETE_COMMUNITY_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const createModeratorAction = (moderatorData) => async (dispatch) => {
+  try {
+    const { error, data } = await api.createModerator(moderatorData);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({
+      type: types.CREATE_MODERATOR_SUCCESS,
+      payload: data,
+    });
+    // Refresh moderators list
+    dispatch(getModeratorsAction());
+  } catch (error) {
+    dispatch({
+      type: types.CREATE_MODERATOR_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const deleteModeratorAction = (moderatorId) => async (dispatch) => {
+  try {
+    const { error } = await api.deleteModerator(moderatorId);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({
+      type: types.DELETE_MODERATOR_SUCCESS,
+    });
+    // Refresh moderators list
+    dispatch(getModeratorsAction());
+  } catch (error) {
+    dispatch({
+      type: types.DELETE_MODERATOR_FAIL,
+      payload: error.message,
+    });
+  }
+};

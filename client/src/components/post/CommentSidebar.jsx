@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import VerifiedBadge from "../shared/VerifiedBadge";
 
 const CommentSidebar = ({ comments }) => {
   const currentPage = 1;
@@ -36,11 +37,19 @@ const CommentSidebar = ({ comments }) => {
                 />
 
                 <div className="flex flex-col">
-                  <span className="text-md font-semibold hover:underline">
-                    <Link to={`/user/${comment.user._id}`}>
-                      {comment.user.name}
-                    </Link>
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className={`text-md font-semibold hover:underline ${comment.user.role === "moderator" ? "text-red-600" : ""}`}>
+                      <Link to={`/user/${comment.user._id}`}>
+                        {comment.user.name}
+                      </Link>
+                    </span>
+                    {comment.user.isVerified && <VerifiedBadge size="xs" />}
+                    {comment.user.role === "moderator" && (
+                      <span className="ml-1 bg-red-100 text-red-800 px-1 py-0.5 rounded-full text-xs font-medium">
+                        MOD
+                      </span>
+                    )}
+                  </div>
                   <p className="text-gray-500 text-xs ml-1">
                     {comment.createdAt}
                   </p>

@@ -11,6 +11,7 @@ const {
   deleteContextAuthData,
   blockContextAuthData,
   unblockContextAuthData,
+  enableContextAuth,
 } = require("../controllers/auth.controller");
 
 const {
@@ -47,6 +48,7 @@ router.get(
   getBlockedAuthContextData
 );
 router.get("/user-preferences", requireAuth, decodeToken, getUserPreferences);
+router.post("/enable-context-auth", requireAuth, decodeToken, enableContextAuth);
 
 router.delete("/context-data/:contextId", requireAuth, deleteContextAuthData);
 

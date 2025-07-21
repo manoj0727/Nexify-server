@@ -40,6 +40,52 @@ const postSchema = new Schema(
         ref: "User",
       },
     ],
+    
+    // Enhanced Moderation Fields
+    isPinned: {
+      type: Boolean,
+      default: false,
+    },
+    isLocked: {
+      type: Boolean,
+      default: false,
+    },
+    pinnedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    pinnedAt: {
+      type: Date,
+    },
+    lockedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    lockedAt: {
+      type: Date,
+    },
+    editedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    editedAt: {
+      type: Date,
+    },
+    originalTitle: {
+      type: String,
+    },
+    moderationStatus: {
+      type: String,
+      enum: ["approved", "pending", "rejected"],
+      default: "approved",
+    },
+    moderatorNotes: {
+      type: String,
+    },
+    qualityScore: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
