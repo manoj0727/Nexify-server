@@ -24,7 +24,6 @@ const CommunityManagement = () => {
 
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [selectedCommunityData, setSelectedCommunityData] = useState(null);
-  const [selectedModerator, setSelectedModerator] = useState(null);
   const [newModerator, setNewModerator] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isChangingCommunity, setIsChangingCommunity] = useState(false);
@@ -46,10 +45,6 @@ const CommunityManagement = () => {
   useEffect(() => {
     setSelectedCommunityData(community);
   }, [community]);
-
-  const handleModeratorSelect = (moderator) => {
-    setSelectedModerator(moderator);
-  };
 
   const handleRemoveModerator = async (moderator) => {
     setIsUpdating(true);

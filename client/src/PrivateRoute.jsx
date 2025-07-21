@@ -5,12 +5,11 @@ import { setInitialAuthState } from "./redux/actions/authActions";
 import Navbar from "./components/shared/Navbar";
 import Leftbar from "./components/shared/Leftbar";
 import Rightbar from "./components/shared/Rightbar";
-
+import CommunityRightbar from "./components/community/Rightbar";
 import ModeratorRightbar from "./components/moderator/Rightbar";
 
 const noRightbarRoutes = [
   /\/post\/[^/]+$/,
-  /\/community\/[^/]+$/,
   /\/community\/[^/]+\/report$/,
   /\/community\/[^/]+\/reported-post$/,
   /\/community\/[^/]+\/moderator$/,
@@ -41,6 +40,9 @@ const PrivateRoute = ({ userData }) => {
     regex.test(location.pathname)
   );
 
+  // Check if we're on a community page
+  const isCommunityPage = /^\/community\/[^/]+$/.test(location.pathname);
+
   const [showLeftbar, setShowLeftbar] = useState(false);
 
   const toggleLeftbar = () => {
@@ -61,7 +63,11 @@ const PrivateRoute = ({ userData }) => {
         <Outlet />
 
         {showRightbar ? (
-          currentUserIsModerator ? (
+          isCommunityPage ? (
+            <div className="hidden md:block">
+              <CommunityRightbar />
+            </div>
+          ) : currentUserIsModerator ? (
             <ModeratorRightbar />
           ) : (
             <Rightbar />

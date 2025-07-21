@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FiSearch, FiCheck, FiX } from "react-icons/fi";
 import axios from "axios";
 import VerifiedBadge from "../shared/VerifiedBadge";
-import { useSelector } from "react-redux";
 
 const UserVerification = () => {
   const [users, setUsers] = useState([]);
