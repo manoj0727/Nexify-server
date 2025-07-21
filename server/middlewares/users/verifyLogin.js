@@ -4,9 +4,9 @@ const UserContext = require("../../models/context.model");
 const EmailVerification = require("../../models/email.model");
 const { query, validationResult } = require("express-validator");
 const { verifyLoginHTML } = require("../../utils/emailTemplates");
+const { createEmailTransporter, getBaseUrl } = require("../../config/deployment");
 
-const CLIENT_URL = process.env.CLIENT_URL;
-const EMAIL_SERVICE = process.env.EMAIL_SERVICE;
+const CLIENT_URL = getBaseUrl();
 
 const verifyLoginValidation = [
   query("email").isEmail().normalizeEmail(),
@@ -20,11 +20,7 @@ const verifyLoginValidation = [
   },
 ];
 const sendLoginVerificationEmail = async (req, res) => {
-  const USER = process.env.EMAIL;
-  const PASS = process.env.PASSWORD;
-
   const currentContextData = req.currentContextData;
-
   const { email, name } = req.user;
 
   const id = currentContextData.id;
@@ -32,19 +28,26 @@ const sendLoginVerificationEmail = async (req, res) => {
   const blockLink = `${CLIENT_URL}/block-device?id=${id}&email=${email}`;
 
   try {
-    let transporter = nodemailer.createTransport({
-      service: EMAIL_SERVICE,
-      auth: {
-        user: USER,
-        pass: PASS,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    const transporter = createEmailTransporter();
+    
+    if (!transporter) {
+      console.error("Email service not configured for login verification.");
+      // Store the suspicious login but can't send email
+      const suspiciousLogin = new SuspiciousLogin({
+        ...currentContextData,
+        status: "email_failed"
+      });
+      await suspiciousLogin.save();
+      
+      return res.status(200).json({
+        message: "Login from new device detected. Email service not configured. Please contact support.",
+        requiresManualVerification: true,
+        suspiciousLoginId: id
+      });
+    }
 
     let info = await transporter.sendMail({
-      from: `"Nexify" <${USER}>`,
+      from: `"Nexify" <${process.env.EMAIL}>`,
       to: email,
       subject: "Action Required: Verify Recent Login",
       html: verifyLoginHTML(

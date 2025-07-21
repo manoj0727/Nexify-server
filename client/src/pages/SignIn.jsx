@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction, clearMessage } from "../redux/actions/authActions";
-import { AiFillGithub } from "react-icons/ai";
+import { AiFillLinkedin } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import ButtonLoadingSpinner from "../components/loader/ButtonLoadingSpinner";
@@ -248,12 +248,12 @@ const SignIn = () => {
 
               <div className="mt-6 flex justify-center space-x-6">
                 <a
-                  href="https://github.com/manoj0727/Nexify-server.git"
+                  href="https://www.linkedin.com/in/manoj-kumawat-iiits/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-500 hover:text-gray-700 transition duration-150"
                 >
-                  <AiFillGithub className="h-6 w-6" />
+                  <AiFillLinkedin className="h-6 w-6" />
                 </a>
                 <Link
                   to="/admin"

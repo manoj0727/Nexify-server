@@ -4,9 +4,9 @@ const EmailVerification = require("../../models/email.model");
 const PendingRegistration = require("../../models/pendingRegistration.model");
 const { query, validationResult } = require("express-validator");
 const { verifyEmailHTML } = require("../../utils/emailTemplates");
+const { createEmailTransporter, getBaseUrl } = require("../../config/deployment");
 
-const CLIENT_URL = process.env.CLIENT_URL;
-const EMAIL_SERVICE = process.env.EMAIL_SERVICE;
+const CLIENT_URL = getBaseUrl();
 
 const verifyEmailValidation = [
   query("email").isEmail().normalizeEmail(),
@@ -26,8 +26,6 @@ const verifyEmailValidation = [
 ];
 
 const sendVerificationEmail = async (req, res) => {
-  const USER = process.env.EMAIL;
-  const PASS = process.env.PASSWORD;
   // Use email and name from request object (set by addUser) or from body
   let email = req.userEmail || req.body.email;
   const name = req.userName || req.body.name;
@@ -41,19 +39,28 @@ const sendVerificationEmail = async (req, res) => {
   console.log("Generated verification code:", verificationCode, "Type:", typeof verificationCode);
 
   try {
-    let transporter = nodemailer.createTransport({
-      service: EMAIL_SERVICE,
-      auth: {
-        user: USER,
-        pass: PASS,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    const transporter = createEmailTransporter();
+    
+    if (!transporter) {
+      console.error("Email service not configured. Showing verification code for manual entry.");
+      // Save verification code even if email can't be sent
+      const newVerification = new EmailVerification({
+        email,
+        verificationCode,
+        messageId: 'manual-verification',
+        for: "signup",
+      });
+      await newVerification.save();
+      
+      return res.status(201).json({
+        message: `User registered successfully! Email service is not configured. Please use verification code: ${verificationCode}`,
+        verificationCode: process.env.NODE_ENV === 'development' ? verificationCode : undefined,
+        requiresManualVerification: true
+      });
+    }
 
     let info = await transporter.sendMail({
-      from: `"Nexify" <${USER}>`,
+      from: `"Nexify" <${process.env.EMAIL}>`,
       to: email,
       subject: "Verify your email address",
       html: verifyEmailHTML(name, verificationLink, verificationCode),
@@ -178,8 +185,6 @@ const verifyEmail = async (req, res, next) => {
 };
 
 const resendVerificationEmail = async (req, res) => {
-  const USER = process.env.EMAIL;
-  const PASS = process.env.PASSWORD;
   const { email } = req.body;
   
   if (!email) {
@@ -215,19 +220,27 @@ const resendVerificationEmail = async (req, res) => {
     const verificationLink = `${CLIENT_URL}/auth/verify?code=${verificationCode}&email=${normalizedEmail}`;
 
     // Send email
-    let transporter = nodemailer.createTransport({
-      service: EMAIL_SERVICE,
-      auth: {
-        user: USER,
-        pass: PASS,
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    const transporter = createEmailTransporter();
+    
+    if (!transporter) {
+      // Save verification code even if email can't be sent
+      const newVerification = new EmailVerification({
+        email: normalizedEmail,
+        verificationCode,
+        messageId: 'manual-verification',
+        for: "signup",
+      });
+      await newVerification.save();
+      
+      return res.status(200).json({
+        message: `Email service is not configured. Please use verification code: ${verificationCode}`,
+        verificationCode: process.env.NODE_ENV === 'development' ? verificationCode : undefined,
+        requiresManualVerification: true
+      });
+    }
 
     let info = await transporter.sendMail({
-      from: `"Nexify" <${USER}>`,
+      from: `"Nexify" <${process.env.EMAIL}>`,
       to: normalizedEmail,
       subject: "Verify your email address",
       html: verifyEmailHTML(pendingRegistration.name, verificationLink, verificationCode),

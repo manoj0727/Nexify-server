@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: require("path").join(__dirname, "../../.env") });
 const User = require("../models/user.model");
 const Token = require("../models/token.model");
 const JwtStrategy = require("passport-jwt").Strategy,
