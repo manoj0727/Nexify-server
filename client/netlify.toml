@@ -7,9 +7,18 @@
   command = "npm run build"
   publish = "build"
 
-# Environment variables should be set in Netlify dashboard
-# Do not put sensitive data here in a public repository
-# [build.environment]
-#   REACT_APP_API_URL = "your-backend-url"
-#   REACT_APP_DEMO_EMAIL = "your-demo-email"
-#   REACT_APP_DEMO_PASSWORD = "your-demo-password"
+[build.environment]
+  REACT_APP_API_URL = "https://nexify-server.onrender.com"
+  REACT_APP_DEMO_EMAIL = "demo@nexify.com"
+  REACT_APP_DEMO_PASSWORD = "demo123"
+  REACT_APP_NODE_ENV = "production"
+
+# Security headers to protect your app
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
