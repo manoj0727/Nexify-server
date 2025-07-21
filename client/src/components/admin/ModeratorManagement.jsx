@@ -173,28 +173,28 @@ const ModeratorManagement = () => {
   }
 
   return (
-    <div className="flex gap-2 h-[85vh] w-full mt-3 border rounded-md">
-      {/* Left column - Moderators list */}
-      <div className="flex flex-col w-full bg-white shadow-inner rounded-md border-r">
-        <div className="flex justify-between items-center p-4 border-b-2">
-          <h1 className="text-lg font-bold text-center">Moderators</h1>
+    <div className="flex flex-col lg:flex-row gap-4 w-full">
+      {/* Moderators list - full width on mobile, 1/3 on desktop */}
+      <div className="flex flex-col w-full lg:w-1/3 bg-white shadow-sm rounded-lg border">
+        <div className="flex justify-between items-center p-3 sm:p-4 border-b">
+          <h1 className="text-base sm:text-lg font-bold">Moderators</h1>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+            className="bg-blue-500 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded hover:bg-blue-600 text-xs sm:text-sm transition-colors"
           >
             Add New
           </button>
         </div>
-        <div className="flex flex-col overflow-y-auto">
+        <div className="flex flex-col overflow-y-auto max-h-96 lg:max-h-[calc(100vh-200px)]">
           {moderators.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">
+            <div className="p-3 sm:p-4 text-center text-gray-500 text-sm">
               No moderators found. Create one to get started.
             </div>
           ) : (
             moderators.map((moderator) => (
               <div
                 key={moderator._id}
-                className={`p-4 cursor-pointer hover:bg-background border-b flex flex-col ${
+                className={`p-3 sm:p-4 cursor-pointer hover:bg-gray-50 border-b flex flex-col transition-colors ${
                   selectedModerator?._id === moderator._id ? "bg-gray-200" : ""
                 }`}
                 onClick={() => handleModeratorSelect(moderator)}
@@ -214,8 +214,8 @@ const ModeratorManagement = () => {
         </div>
       </div>
 
-      {/* Right column - Moderator details */}
-      <div className="flex flex-col w-full bg-white rounded-md px-5 py-5 border-l">
+      {/* Moderator details - full width on mobile, 2/3 on desktop */}
+      <div className="flex flex-col w-full lg:w-2/3 bg-white rounded-lg shadow-sm p-4 sm:p-6 border lg:border-l-0">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <span className="admin-loader"></span>
@@ -332,8 +332,8 @@ const ModeratorManagement = () => {
 
       {/* Create Moderator Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Create New Moderator</h2>
             
             {createError && (
@@ -354,7 +354,7 @@ const ModeratorManagement = () => {
                 <input
                   type="text"
                   required
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded text-sm"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -370,7 +370,7 @@ const ModeratorManagement = () => {
                   <input
                     type="text"
                     required
-                    className="flex-1 p-2 border rounded-l"
+                    className="flex-1 p-2 border rounded-l text-sm"
                     value={formData.username}
                     onChange={(e) =>
                       setFormData({ ...formData, username: e.target.value })
@@ -394,7 +394,7 @@ const ModeratorManagement = () => {
                   type="password"
                   required
                   minLength="6"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded text-sm"
                   value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
