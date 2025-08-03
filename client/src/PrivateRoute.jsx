@@ -57,10 +57,12 @@ const PrivateRoute = ({ userData }) => {
         showLeftbar={showLeftbar}
       />
 
-      <div className="md:mx-auto md:grid md:w-10/12 md:grid-cols-4 md:gap-6">
+      <div className="md:mx-auto md:grid md:w-11/12 md:gap-6" style={{gridTemplateColumns: '300px 1fr 300px'}}>
         <Leftbar showLeftbar={showLeftbar} />
 
-        <Outlet />
+        <div className="col-span-4 md:col-span-1">
+          <Outlet />
+        </div>
 
         {showRightbar ? (
           isCommunityPage ? (
