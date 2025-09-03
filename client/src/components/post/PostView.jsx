@@ -63,6 +63,16 @@ const PostView = ({ post, userData }) => {
     );
   }
 
+  // Handle case where user or community is null
+  if (!user || !community) {
+    console.error("PostView missing user or community data:", post);
+    return (
+      <div className="main-section flex justify-center items-center">
+        <p>Error: Post data is incomplete</p>
+      </div>
+    );
+  }
+
   return (
     <div className="main-section border p-5 bg-white rounded-lg shadow-md">
       <p className="border border-dashed border-primary cursor-pointer px-2 py-2 w-7 h-7 flex justify-center items-center mb-3 rounded-full">
@@ -76,7 +86,7 @@ const PostView = ({ post, userData }) => {
         <div className="flex items-center gap-2">
           <img
             className="rounded-full overflow-hidden w-12 h-12 object-cover"
-            src={user.avatar}
+            src={user.avatar || "/images/default-avatar.svg"}
             alt="user avatar"
             loading="lazy"
           />

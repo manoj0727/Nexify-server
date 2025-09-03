@@ -19,6 +19,12 @@ const SavedPost = ({ post }) => {
     navigate(-1);
   };
 
+  // Handle case where user or community is null
+  if (!user || !community) {
+    console.error("SavedPost missing user or community data:", post);
+    return null; // Don't render the post if critical data is missing
+  }
+
   return (
     <div className="px-6 py-6 rounded-md border bg-white mb-6 w-full">
       <p className="border border-dashed border-primary cursor-pointer px-2 py-2 w-7 h-7 flex justify-center items-center mb-3 rounded-full">
@@ -31,7 +37,7 @@ const SavedPost = ({ post }) => {
         <div className="flex gap-2">
           <img
             className="rounded-full overflow-hidden"
-            src={user.avatar}
+            src={user.avatar || "/images/default-avatar.svg"}
             alt="user avatar"
             style={{ width: "50px" }}
             loading="lazy"

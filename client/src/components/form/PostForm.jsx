@@ -25,12 +25,12 @@ const PostForm = ({ communityId, communityName }) => {
     loading: false,
   });
 
-  const { isPostInappropriate, postCategory, confirmationToken } = useSelector(
-    (state) => ({
-      isPostInappropriate: state.posts?.isPostInappropriate,
-      postCategory: state.posts?.postCategory,
-      confirmationToken: state.posts?.confirmationToken,
-    })
+  const isPostInappropriate = useSelector(
+    (state) => state.posts?.isPostInappropriate
+  );
+  const postCategory = useSelector((state) => state.posts?.postCategory);
+  const confirmationToken = useSelector(
+    (state) => state.posts?.confirmationToken
   );
 
   const handleContentChange = (event) => {

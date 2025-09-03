@@ -25,13 +25,19 @@ const Post = ({ post }) => {
     setShowModal(value);
   };
 
+  // Handle case where user or community is null
+  if (!user || !community) {
+    console.error("Post missing user or community data:", post);
+    return null; // Don't render the post if critical data is missing
+  }
+
   return (
     <div className="border rounded bg-white p-4 m-2 hover:shadow-lg duration-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img
             className="rounded-full overflow-hidden w-12 h-12 object-cover"
-            src={user.avatar}
+            src={user.avatar || "/images/default-avatar.svg"}
             alt="user avatar"
             loading="lazy"
           />
