@@ -57,8 +57,10 @@ const createPost = async (req, res) => {
 
     res.json(post);
   } catch (error) {
+    console.error("Error in createPost:", error);
     res.status(500).json({
       message: "Error creating post",
+      error: error.message
     });
   }
 };
@@ -157,6 +159,12 @@ const getPost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
+    
+    // Check if post has valid user data
+    if (!post.user) {
+      console.error(`Post ${postId} has null user data`);
+      return res.status(404).json({ message: "Post user not found" });
+    }
 
     const comments = await findCommentsByPostId(postId);
 
@@ -189,10 +197,18 @@ const findCommentsByPostId = async (postId) =>
     .lean();
 
 const formatComments = (comments) =>
-  comments.map((comment) => ({
-    ...comment,
-    createdAt: dayjs(comment.createdAt).fromNow(),
-  }));
+  comments
+    .filter((comment) => {
+      if (!comment.user) {
+        console.warn(`Comment ${comment._id} has null user, skipping`);
+        return false;
+      }
+      return true;
+    })
+    .map((comment) => ({
+      ...comment,
+      createdAt: dayjs(comment.createdAt).fromNow(),
+    }));
 
 const countSavedPosts = async (postId) =>
   await User.countDocuments({ savedPosts: postId });
@@ -225,7 +241,16 @@ const getPosts = async (req, res) => {
       .limit(parseInt(limit))
       .lean();
 
-    const formattedPosts = posts.map((post) => ({
+    // Filter out posts where user data is null (deleted users)
+    const validPosts = posts.filter((post) => {
+      if (!post.user) {
+        console.warn(`Post ${post._id} has null user, skipping`);
+        return false;
+      }
+      return true;
+    });
+
+    const formattedPosts = validPosts.map((post) => ({
       ...post,
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
@@ -241,8 +266,10 @@ const getPosts = async (req, res) => {
       totalPosts,
     });
   } catch (error) {
+    console.error("Error in getPosts:", error);
     res.status(500).json({
       message: "Error retrieving posts",
+      error: error.message
     });
   }
 };
@@ -283,7 +310,16 @@ const getCommunityPosts = async (req, res) => {
       .limit(parseInt(limit))
       .lean();
 
-    const formattedPosts = posts.map((post) => ({
+    // Filter out posts where user data is null (deleted users)
+    const validPosts = posts.filter((post) => {
+      if (!post.user) {
+        console.warn(`Post ${post._id} has null user, skipping`);
+        return false;
+      }
+      return true;
+    });
+
+    const formattedPosts = validPosts.map((post) => ({
       ...post,
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
@@ -335,15 +371,26 @@ const getFollowingUsersPosts = async (req, res) => {
       .limit(20)
       .lean();
 
-    const formattedPosts = posts.map((post) => ({
+    // Filter out posts where user data is null (deleted users)
+    const validPosts = posts.filter((post) => {
+      if (!post.user) {
+        console.warn(`Following user post ${post._id} has null user, skipping`);
+        return false;
+      }
+      return true;
+    });
+
+    const formattedPosts = validPosts.map((post) => ({
       ...post,
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
 
     res.status(200).json(formattedPosts);
   } catch (error) {
+    console.error("Error in getFollowingUsersPosts:", error);
     res.status(500).json({
       message: "Server error",
+      error: error.message
     });
   }
 };
@@ -584,15 +631,26 @@ const getSavedPosts = async (req, res) => {
       .populate("user", "name avatar isVerified role")
       .populate("community", "name");
 
-    const formattedPosts = savedPosts.map((post) => ({
+    // Filter out posts where user data is null (deleted users)
+    const validPosts = savedPosts.filter((post) => {
+      if (!post.user) {
+        console.warn(`Saved post ${post._id} has null user, skipping`);
+        return false;
+      }
+      return true;
+    });
+
+    const formattedPosts = validPosts.map((post) => ({
       ...post.toObject(),
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
 
     res.status(200).json(formattedPosts);
   } catch (error) {
+    console.error("Error in getSavedPosts:", error);
     res.status(500).json({
       message: "Server error",
+      error: error.message
     });
   }
 };

@@ -10,7 +10,7 @@ const processPost = async (req, res, next) => {
   const { serviceProvider, timeout } = await getSystemPreferences();
 
   try {
-    if (serviceProvider === "disabled") {
+    if (serviceProvider === "disabled" || !serviceProvider) {
       req.failedDetection = false;
       return next();
     }
@@ -43,8 +43,12 @@ const processPost = async (req, res, next) => {
     }
   } catch (error) {
     const errorMessage = `Error processing post: ${error.message}`;
+    console.error("ProcessPost Error:", errorMessage);
     await saveLogInfo(null, errorMessage, serviceProvider, "error");
-    return res.status(500).json({ message: "Error processing post" });
+    return res.status(500).json({ 
+      message: "Error processing post - category filtering failed",
+      error: error.message
+    });
   }
 };
 

@@ -36,8 +36,20 @@ function createCategoryFilterService(servicePreference) {
       return new InterfaceAPIService();
     case "ClassifierAPI":
       return new ClassifierAPIService();
+    case "disabled":
+    case null:
+    case undefined:
+    case "":
+      // Return a dummy service that doesn't do any filtering
+      return {
+        getCategories: async () => ({})
+      };
     default:
-      throw new Error("Invalid service preference");
+      console.warn(`Unknown service preference: ${servicePreference}, using disabled mode`);
+      // Return a dummy service instead of throwing an error
+      return {
+        getCategories: async () => ({})
+      };
   }
 }
 

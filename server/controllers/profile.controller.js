@@ -282,8 +282,10 @@ const getFollowingUsers = async (req, res) => {
 
     res.status(200).json(followingUsers);
   } catch (error) {
+    console.error("Error in getFollowingUsers:", error);
     res.status(500).json({
       message: "Some error occurred while retrieving the following users",
+      error: error.message
     });
   }
 };
