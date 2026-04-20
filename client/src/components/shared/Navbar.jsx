@@ -36,10 +36,10 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
 
   return (
     <nav className="sticky top-0 z-40 mb-5 w-full border-b border-line-subtle bg-surface/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 md:px-8 lg:px-10">
-        <div className="flex items-center gap-3">
+      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center gap-2 px-3 sm:gap-3 sm:px-4 lg:gap-4 lg:px-6 xl:px-8">
+        <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
           <button
-            className="grid h-9 w-9 place-items-center rounded-md border border-line bg-surface text-ink-muted transition-colors hover:bg-surface-hover md:hidden"
+            className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-md border border-line bg-surface text-ink-muted transition-colors hover:bg-surface-hover lg:hidden"
             onClick={toggleLeftbar}
             aria-label="Toggle menu"
           >
@@ -48,7 +48,7 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
 
           <Link
             to="/"
-            className="flex items-center gap-2"
+            className="flex flex-shrink-0 items-center gap-2"
             aria-label="Nexify home"
           >
             <div
@@ -63,14 +63,14 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
           </Link>
         </div>
 
-        <div className="flex-1 max-w-xl">
+        <div className="min-w-0 flex-1">
           <Search />
         </div>
 
-        <div className="relative flex items-center gap-2">
+        <div className="relative flex flex-shrink-0 items-center">
           <button
             type="button"
-            className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface p-0.5 pr-3 transition-all hover:border-brand/40 hover:shadow-sm"
+            className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface p-0.5 transition-all hover:border-brand/40 hover:shadow-sm sm:pr-3"
             onClick={handleProfileClick}
             aria-label="Account menu"
           >
@@ -79,7 +79,7 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
               alt={userData.name}
               className="h-8 w-8 rounded-full object-cover ring-2 ring-white"
             />
-            <span className="hidden text-sm font-medium text-ink-muted group-hover:text-ink md:inline-block">
+            <span className="hidden max-w-[90px] truncate text-sm font-medium text-ink-muted group-hover:text-ink md:inline-block">
               {userData.name?.split(" ")[0]}
             </span>
           </button>

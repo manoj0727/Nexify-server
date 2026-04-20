@@ -126,7 +126,7 @@ const SignUpNew = () => {
           }}
         />
         <div
-          className="relative z-10 flex h-full flex-col justify-between p-14"
+          className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14"
           style={{ color: "#FAF3E1" }}
         >
           <div
@@ -174,7 +174,7 @@ const SignUpNew = () => {
       </aside>
 
       {/* Right form */}
-      <div className="relative z-10 flex w-full flex-col px-6 py-10 sm:px-10 lg:w-1/2 lg:px-16">
+      <div className="relative z-10 flex w-full flex-col px-6 py-10 sm:px-10 lg:w-1/2 lg:px-8 xl:px-16">
         <Link
           to="/"
           className="inline-flex items-center gap-2 self-start"

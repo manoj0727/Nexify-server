@@ -95,17 +95,17 @@ const MainSection = ({ userData }) => {
   return (
     <>
       {posts.length > 0 && (
-        <div className="mb-2 flex items-center justify-between px-1">
-          <h2 className="font-display text-xl font-semibold text-ink">
+        <div className="mb-2 flex items-center justify-between gap-2 px-1">
+          <h2 className="font-display text-lg font-semibold text-ink sm:text-xl">
             For you
           </h2>
-          <span className="nx-chip">
+          <span className="nx-chip flex-shrink-0">
             {totalPosts} {totalPosts === 1 ? "post" : "posts"}
           </span>
         </div>
       )}
 
-      <div className="flex flex-col gap-3">{memoizedPosts}</div>
+      <div className="flex min-w-0 flex-col gap-3">{memoizedPosts}</div>
 
       {posts.length > 0 && posts.length < totalPosts && (
         <LoadMoreButton

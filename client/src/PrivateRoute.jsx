@@ -49,6 +49,19 @@ const PrivateRoute = ({ userData }) => {
     setShowLeftbar(!showLeftbar);
   };
 
+  // close mobile drawer whenever route changes
+  useEffect(() => {
+    setShowLeftbar(false);
+  }, [location.pathname]);
+
+  // lock body scroll while mobile drawer is open
+  useEffect(() => {
+    document.body.style.overflow = showLeftbar ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showLeftbar]);
+
   return isAuthenticated(userData, accessToken) ? (
     <div className="nx-shell relative scroll-smooth">
       {/* ambient backdrop */}
@@ -66,19 +79,28 @@ const PrivateRoute = ({ userData }) => {
         showLeftbar={showLeftbar}
       />
 
+      {/* mobile drawer backdrop */}
+      {showLeftbar && (
+        <div
+          className="nx-drawer-backdrop"
+          onClick={() => setShowLeftbar(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <div
-        className="mx-auto w-full max-w-7xl px-3 pb-12 md:grid md:gap-6 md:px-8 lg:px-10"
-        style={{ gridTemplateColumns: "260px 1fr 300px" }}
+        className="mx-auto w-full max-w-[1280px] px-3 pb-12 sm:px-4 lg:grid lg:gap-6 lg:px-6 xl:gap-8 xl:px-8"
+        style={{ gridTemplateColumns: "240px minmax(0, 1fr) 300px" }}
       >
         <Leftbar showLeftbar={showLeftbar} />
 
-        <main className="col-span-4 md:col-span-1">
+        <main className="min-w-0">
           <Outlet />
         </main>
 
         {showRightbar ? (
           isCommunityPage ? (
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <CommunityRightbar />
             </div>
           ) : currentUserIsModerator ? (

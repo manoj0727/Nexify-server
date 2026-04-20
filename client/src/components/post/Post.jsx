@@ -35,11 +35,11 @@ const Post = ({ post }) => {
   const isMod = user.role === "moderator";
 
   return (
-    <article className="nx-card nx-card-hover animate-fade-up p-5">
+    <article className="nx-card nx-card-hover animate-fade-up min-w-0 p-4 sm:p-5">
       {/* header */}
       <header className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="relative flex-shrink-0">
             <img
               className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow-xs"
               src={user.avatar || "/images/default-avatar.svg"}
@@ -52,12 +52,12 @@ const Post = ({ post }) => {
               </span>
             )}
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
+          <div className="flex min-w-0 flex-col">
+            <div className="flex min-w-0 items-center gap-1.5">
               {userData._id === user._id ? (
                 <Link
                   to="/profile"
-                  className={`font-semibold capitalize ${
+                  className={`truncate font-semibold capitalize ${
                     isMod ? "text-danger" : "text-ink"
                   } hover:text-brand-700`}
                 >
@@ -66,29 +66,33 @@ const Post = ({ post }) => {
               ) : (
                 <Link
                   to={`/user/${user._id}`}
-                  className={`font-semibold capitalize ${
+                  className={`truncate font-semibold capitalize ${
                     isMod ? "text-danger" : "text-ink"
                   } hover:text-brand-700`}
                 >
                   {user.name}
                 </Link>
               )}
-              {user.isVerified && <VerifiedBadge size="sm" />}
+              {user.isVerified && (
+                <span className="flex-shrink-0">
+                  <VerifiedBadge size="sm" />
+                </span>
+              )}
               {isMod && (
-                <span className="nx-chip border-danger/20 bg-danger/5 text-danger">
+                <span className="nx-chip flex-shrink-0 border-danger/20 bg-danger/5 text-danger">
                   Mod
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-ink-subtle">
+            <div className="flex min-w-0 items-center gap-1.5 text-xs text-ink-subtle">
               <Link
                 to={`/community/${community.name}`}
-                className="font-medium hover:text-brand-700"
+                className="truncate font-medium hover:text-brand-700"
               >
                 {community.name}
               </Link>
-              <span>·</span>
-              <span>{createdAt}</span>
+              <span className="flex-shrink-0">·</span>
+              <span className="flex-shrink-0">{createdAt}</span>
             </div>
           </div>
         </div>
@@ -97,7 +101,7 @@ const Post = ({ post }) => {
           <Tooltip text="Delete post">
             <button
               onClick={() => toggleModal(true)}
-              className="grid h-8 w-8 place-items-center rounded-full text-ink-subtle transition-colors hover:bg-danger/5 hover:text-danger"
+              className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-full text-ink-subtle transition-colors hover:bg-danger/5 hover:text-danger"
               aria-label="Delete post"
             >
               <HiOutlineTrash className="h-4 w-4" />
@@ -110,6 +114,7 @@ const Post = ({ post }) => {
       <div
         onClick={openPost}
         className="mt-4 cursor-pointer break-words text-[15px] leading-relaxed text-ink"
+        style={{ overflowWrap: "anywhere" }}
       >
         {content}
       </div>

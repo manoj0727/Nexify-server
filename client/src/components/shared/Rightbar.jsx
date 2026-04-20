@@ -101,7 +101,7 @@ const Rightbar = () => {
             {visibleCommunities.map((community) => (
               <li
                 key={community._id}
-                className="group nx-card nx-card-hover flex items-center justify-between gap-3 p-2.5"
+                className="group nx-card nx-card-hover flex min-w-0 items-center justify-between gap-2 p-2.5"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <img
@@ -121,7 +121,7 @@ const Rightbar = () => {
                 </div>
                 <button
                   onClick={() => toggleJoinModal(community._id, true)}
-                  className="nx-btn-secondary h-8 px-2.5 py-1 text-xs"
+                  className="nx-btn-secondary h-8 flex-shrink-0 px-2.5 py-1 text-xs"
                 >
                   Join
                 </button>
@@ -155,7 +155,7 @@ const Rightbar = () => {
             recommendedUsers.map((user) => (
               <li
                 key={user._id}
-                className="nx-card nx-card-hover flex items-center justify-between gap-3 p-2.5"
+                className="nx-card nx-card-hover flex min-w-0 items-center justify-between gap-2 p-2.5"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <img
@@ -178,7 +178,7 @@ const Rightbar = () => {
                 <button
                   disabled={followLoading[user._id]}
                   onClick={() => followUserHandler(user._id)}
-                  className="nx-btn-primary h-8 px-3 py-1 text-xs"
+                  className="nx-btn-primary h-8 flex-shrink-0 px-3 py-1 text-xs"
                 >
                   {followLoading[user._id] ? (
                     <span className="loader h-3 w-3" />
