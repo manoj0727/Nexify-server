@@ -53,14 +53,19 @@ const Like = ({ post }) => {
   return (
     <button
       onClick={toggleLike}
-      className="flex items-center cursor-pointer gap-1 text-lg"
+      className={`group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200 ease-out-expo ${
+        likeState.liked
+          ? "text-brand-700 bg-brand/10 hover:bg-brand/15"
+          : "text-ink-muted hover:bg-surface-hover hover:text-brand-700"
+      }`}
+      aria-pressed={likeState.liked}
     >
       {likeState.liked ? (
-        <HiHandThumbUp className="text-2xl" />
+        <HiHandThumbUp className="h-5 w-5 transition-transform group-active:scale-90" />
       ) : (
-        <HiOutlineHandThumbUp className="text-2xl" />
-      )}{" "}
-      {likeState.localLikes}
+        <HiOutlineHandThumbUp className="h-5 w-5 transition-transform group-active:scale-90" />
+      )}
+      <span>{likeState.localLikes}</span>
     </button>
   );
 };

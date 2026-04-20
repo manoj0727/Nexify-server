@@ -5,6 +5,7 @@ import debounce from "lodash/debounce";
 import JoinModal from "../modals/JoinModal";
 import { MoonLoader } from "react-spinners";
 import { MdClear } from "react-icons/md";
+import { HiOutlineSearch } from "react-icons/hi";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -81,21 +82,24 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <div className="relative">
+        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-ink-subtle">
+          <HiOutlineSearch className="h-4 w-4" />
+        </span>
         <input
           type="text"
           id="search"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Search for people, posts or communities"
-          className="h-10 py-1 bg-white border w-full md:w-[660px] rounded-full text-sm shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-500 transition duration-300 pl-3 pr-10"
+          placeholder="Search people, posts, communities…"
+          className="h-10 w-full rounded-full border border-line bg-surface-muted pl-11 pr-10 text-sm text-ink placeholder-ink-faint shadow-xs transition-all duration-200 focus:border-brand focus:bg-surface focus:outline-none focus:ring-4 focus:ring-brand/10"
           aria-label="Search"
           autoComplete="off"
         />
         {inputValue !== "" && (
           <button
-            className="absolute top-0 right-0 h-full w-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-ink-subtle hover:text-ink"
             onClick={clearValues}
           >
             <MdClear />
@@ -106,12 +110,12 @@ const Search = () => {
       {inputValue !== "" && (
         <div
           onBlur={() => !community && clearValues()}
-          className="absolute start-0 md:start-auto w-screen top-12 md:w-[660px] bg-white border rounded-md shadow-md"
+          className="absolute left-0 right-0 top-12 z-50 w-full overflow-hidden rounded-lg border border-line bg-surface shadow-xl"
         >
           {loading && (
-            <div className="flex items-center justify-center py-2 px-2">
-              <MoonLoader size={20} color={"#008cff"} />
-              <span className="ml-2">Searching...</span>
+            <div className="flex items-center justify-center gap-2 py-3 px-4 text-sm text-ink-muted">
+              <MoonLoader size={16} color={"#8B5CF6"} />
+              Searching…
             </div>
           )}
           {posts.length > 0 && (

@@ -40,23 +40,33 @@ const UserProfile = ({ userData }) => {
           <OwnProfileCard user={user} />
           <OwnInfoCard user={user} />
 
-          <h3 className="font-semibold text-center mb-4 text-gray-700 p-3 border-b">
-            Your most recent posts
-          </h3>
+          <div className="mt-2 flex items-center justify-between px-1">
+            <h3 className="font-display text-xl font-semibold text-ink">
+              Your recent posts
+            </h3>
+            {posts?.length > 0 && (
+              <span className="nx-chip">
+                {posts.length} {posts.length === 1 ? "post" : "posts"}
+              </span>
+            )}
+          </div>
 
           {postToShow?.length === 0 ? (
-            <div className="text-center text-gray-700 flex justify-center items-center flex-col">
-              <p className="font-semibold py-5 text-gray-500">
-                You haven't posted anything yet
-              </p>
+            <div className="nx-card flex flex-col items-center justify-center p-8 text-center animate-fade-up">
               <img
-                className="max-w-md rounded-full"
+                className="w-40 opacity-80"
                 src={NoPost}
                 alt="no post"
               />
+              <p className="mt-4 font-semibold text-ink">
+                Nothing posted yet
+              </p>
+              <p className="mt-1 text-sm text-ink-muted">
+                Your first post is one step away. Head to a community and share.
+              </p>
             </div>
           ) : (
-            postToShow
+            <div className="flex flex-col gap-3">{postToShow}</div>
           )}
         </>
       )}

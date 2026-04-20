@@ -50,19 +50,31 @@ const PrivateRoute = ({ userData }) => {
   };
 
   return isAuthenticated(userData, accessToken) ? (
-    <div className="scroll-smooth">
+    <div className="nx-shell relative scroll-smooth">
+      {/* ambient backdrop */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 opacity-70"
+        style={{
+          backgroundImage:
+            "radial-gradient(900px circle at 10% -10%, rgba(139,92,246,0.08), transparent 60%), radial-gradient(700px circle at 110% 20%, rgba(236,72,153,0.06), transparent 55%)",
+        }}
+      />
+
       <Navbar
         userData={userData}
         toggleLeftbar={toggleLeftbar}
         showLeftbar={showLeftbar}
       />
 
-      <div className="md:mx-auto md:grid md:w-11/12 md:gap-6" style={{gridTemplateColumns: '300px 1fr 300px'}}>
+      <div
+        className="mx-auto w-full max-w-7xl px-3 pb-12 md:grid md:gap-6 md:px-8 lg:px-10"
+        style={{ gridTemplateColumns: "260px 1fr 300px" }}
+      >
         <Leftbar showLeftbar={showLeftbar} />
 
-        <div className="col-span-4 md:col-span-1">
+        <main className="col-span-4 md:col-span-1">
           <Outlet />
-        </div>
+        </main>
 
         {showRightbar ? (
           isCommunityPage ? (

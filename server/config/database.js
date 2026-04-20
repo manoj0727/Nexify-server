@@ -14,26 +14,38 @@ class Database {
     };
   }
 
-  async connect() {
-    try {
-      console.log("Attempting to connect to MongoDB...");
-      await mongoose.connect(this.uri, this.options);
-      console.log(
-        `Connected to database: ${mongoose.connection.db.databaseName}`
-      );
-      
-      // Handle connection events
-      mongoose.connection.on("error", (err) => {
-        console.error("MongoDB connection error:", err);
-      });
-      
-      mongoose.connection.on("disconnected", () => {
-        console.log("MongoDB disconnected");
-      });
-      
-    } catch (error) {
-      console.error("Failed to connect to MongoDB:", error.message);
-      throw error;
+  async connect({ retries = Infinity, baseDelayMs = 2000, maxDelayMs = 60000 } = {}) {
+    let attempt = 0;
+    while (true) {
+      attempt++;
+      try {
+        console.log(`Attempting to connect to MongoDB (attempt ${attempt})...`);
+        await mongoose.connect(this.uri, this.options);
+        console.log(
+          `Connected to database: ${mongoose.connection.db.databaseName}`
+        );
+
+        mongoose.connection.on("error", (err) => {
+          console.error("MongoDB connection error:", err.message);
+        });
+
+        mongoose.connection.on("disconnected", () => {
+          console.log("MongoDB disconnected");
+        });
+
+        return;
+      } catch (error) {
+        console.error(
+          `Failed to connect to MongoDB (attempt ${attempt}):`,
+          error.message
+        );
+        if (attempt >= retries) {
+          throw error;
+        }
+        const delay = Math.min(baseDelayMs * 2 ** (attempt - 1), maxDelayMs);
+        console.log(`Retrying in ${Math.round(delay / 1000)}s...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
     }
   }
 

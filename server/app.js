@@ -34,29 +34,6 @@ const db = new Database(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// Connect to database before setting up routes
-db.connect()
-  .then(async () => {
-    console.log("Database connection established successfully");
-    
-    // Initialize demo user
-    const initDemoUser = require("./utils/initDemoUser");
-    await initDemoUser();
-    
-    // Initialize default admin
-    const initDefaultAdmin = require("./utils/initDefaultAdmin");
-    await initDefaultAdmin();
-    
-    // Initialize default communities
-    const initCommunities = require("./utils/initCommunities");
-    await initCommunities();
-  })
-  .catch((err) => {
-    console.error("Error connecting to database:", err);
-    console.error("Please check your MONGODB_URI in .env file");
-    process.exit(1);
-  });
-
 app.use(cors(getCorsOptions()));
 app.use(morgan(isProduction() ? "combined" : "dev"));
 app.use("/assets/userFiles", express.static(__dirname + "/assets/userFiles"));
@@ -229,9 +206,31 @@ process.on("SIGINT", async () => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server up and running on port ${PORT}!`);
-  if (isProduction()) {
-    console.log("🚀 Running in production mode");
+async function start() {
+  try {
+    await db.connect();
+    console.log("Database connection established successfully");
+
+    const initDemoUser = require("./utils/initDemoUser");
+    await initDemoUser();
+
+    const initDefaultAdmin = require("./utils/initDefaultAdmin");
+    await initDefaultAdmin();
+
+    const initCommunities = require("./utils/initCommunities");
+    await initCommunities();
+
+    app.listen(PORT, () => {
+      console.log(`Server up and running on port ${PORT}!`);
+      if (isProduction()) {
+        console.log("🚀 Running in production mode");
+      }
+    });
+  } catch (err) {
+    console.error("Fatal startup error:", err.message);
+    console.error("Please check your MONGODB_URI and Atlas cluster status.");
+    process.exit(1);
   }
-});
+}
+
+start();

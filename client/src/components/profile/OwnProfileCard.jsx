@@ -1,121 +1,129 @@
 import { Link } from "react-router-dom";
-import { CiEdit, CiLocationOn } from "react-icons/ci";
-import { GrContactInfo } from "react-icons/gr";
 import { useState } from "react";
 import ProfileUpdateModal from "../modals/ProfileUpdateModal";
 import Tooltip from "../shared/Tooltip";
 import VerifiedBadge from "../shared/VerifiedBadge";
+import { HiOutlinePencilSquare, HiOutlineMapPin } from "react-icons/hi2";
+import { HiOutlineIdentification, HiArrowRight } from "react-icons/hi2";
 
 const OwnProfileCard = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const interests = user.interests
+    ? user.interests.split(",").map((s) => s.trim()).filter(Boolean)
+    : [];
 
   return (
-    <div className="rounded-md border bg-white p-6">
-      <div
-        className="flex cursor-pointer justify-end text-xl"
-        onClick={handleOpenModal}
-      >
-        <Tooltip text="Edit profile">
-          <CiEdit />
-        </Tooltip>
+    <div className="nx-card relative overflow-hidden animate-fade-up">
+      {/* aurora banner */}
+      <div className="relative h-32 w-full sm:h-40">
+        <div
+          className="absolute inset-0 animate-aurora-pan"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #EC4899 100%)",
+            backgroundSize: "200% 200%",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.25) 1px, transparent 0)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-white/30"
+        >
+          <Tooltip text="Edit profile">
+            <span className="flex items-center gap-1.5">
+              <HiOutlinePencilSquare className="h-3.5 w-3.5" />
+              Edit
+            </span>
+          </Tooltip>
+        </button>
       </div>
-      <div className="flex flex-col items-center justify-between">
-        <div className="flex flex-col items-center justify-center">
-          <div className="">
-            <img
-              className="mr-4 h-28 w-28 rounded-full object-cover"
-              src={user.avatar}
-              alt="Profile"
-            ></img>
 
-            <ProfileUpdateModal
-              user={user}
-              isOpen={isModalOpen}
-              onClose={handleCloseModal}
-            />
+      <div className="-mt-14 px-6 pb-6">
+        <div className="flex items-end justify-between gap-4">
+          <img
+            src={user.avatar}
+            alt="Profile"
+            className="h-28 w-28 rounded-full object-cover ring-4 ring-surface shadow-md"
+          />
+        </div>
+
+        <ProfileUpdateModal
+          user={user}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+
+        <div className="mt-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2
+              className={`font-display text-2xl font-bold ${
+                user.role === "moderator" ? "text-danger" : "text-ink"
+              }`}
+            >
+              {user.name}
+            </h2>
+            {user.isVerified && <VerifiedBadge size="md" />}
+            {user.role === "moderator" && (
+              <span className="nx-chip border-danger/20 bg-danger/5 text-danger">
+                Moderator
+              </span>
+            )}
           </div>
 
-          <div>
-            <div className="flex items-center justify-center gap-1 mt-5">
-              <h2 className={`text-center text-lg font-bold ${
-                user.role === "moderator" ? "text-red-600" : ""
-              }`}>
-                {user.name}
-              </h2>
-              {user.isVerified && <VerifiedBadge size="md" />}
-              {user.role === "moderator" && (
-                <span className="ml-1 bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                  MOD
-                </span>
-              )}
+          {user.bio ? (
+            <p className="mt-1.5 flex items-start gap-2 text-sm text-ink-muted">
+              <HiOutlineIdentification className="mt-0.5 h-4 w-4 flex-shrink-0 text-ink-subtle" />
+              <span>{user.bio}</span>
+            </p>
+          ) : (
+            <p className="mt-1.5 text-sm italic text-ink-faint">Bio not added</p>
+          )}
+
+          <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
+            <div className="flex items-center gap-1.5">
+              <HiOutlineMapPin className="h-4 w-4 text-ink-subtle" />
+              {user.location || <span className="italic text-ink-faint">Location not added</span>}
             </div>
-            {user.bio ? (
-              <p className="flex items-center justify-center gap-2 text-gray-600">
-                <GrContactInfo className="text-gray-500" />
-                {user.bio}
-              </p>
-            ) : (
-              <p className="flex items-center justify-center gap-2 text-gray-400">
-                <GrContactInfo className="text-gray-500" />
-                Bio not added
-              </p>
-            )}
-            <hr className="mt-3" />
           </div>
         </div>
-      </div>
-      <div className="my-3 flex flex-col justify-start">
-        <p className="font-semibold">Location</p>
-        {user.location ? (
-          <p className="flex items-center gap-2 text-gray-700">
-            <CiLocationOn className="font-semibold" />
-            {user.location}
-          </p>
-        ) : (
-          <p className="flex items-center gap-2 text-gray-400">
-            <CiLocationOn className="text-lg font-semibold" />
-            Location not added
-          </p>
-        )}
-      </div>
 
-      <div className="mt-4 h-20 overflow-y-auto">
-        <h3 className="font-bold text-xl mb-2">Interests</h3>
-        {user.interests ? (
-          <div className="flex flex-wrap gap-2">
-            {user.interests.split(",").map((interest, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                {interest.trim()}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-600 mt-2">
-            No interests have been set yet. Add some interests to let people
-            know more about you.
-          </p>
-        )}
-      </div>
+        <div className="mt-5">
+          <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+            Interests
+          </h3>
+          {interests.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {interests.map((interest, i) => (
+                <span key={i} className="nx-chip">
+                  {interest}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-ink-faint">
+              No interests yet — add a few to help people find you.
+            </p>
+          )}
+        </div>
 
-      <span className="mt-3 flex flex-col items-center justify-center border-t">
-        <Link
-          className="mt-3 cursor-pointer text-primary hover:underline"
-          to="/devices-locations"
-        >
-          Manage Devices and Locations
-        </Link>
-      </span>
+        <div className="mt-5 border-t border-line-subtle pt-4">
+          <Link
+            to="/devices-locations"
+            className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+          >
+            Manage devices & locations
+            <HiArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

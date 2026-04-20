@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpAction, clearMessage, signInAction } from "../redux/actions/authActions";
+import {
+  signUpAction,
+  clearMessage,
+  signInAction,
+} from "../redux/actions/authActions";
 import { Link } from "react-router-dom";
 import { RxCross1 } from "react-icons/rx";
+import {
+  HiOutlineMail,
+  HiOutlineLockClosed,
+  HiOutlineUser,
+  HiOutlineSparkles,
+  HiOutlinePhotograph,
+} from "react-icons/hi";
+import { HiArrowRight } from "react-icons/hi2";
 import ButtonLoadingSpinner from "../components/loader/ButtonLoadingSpinner";
-import Logo from "../assets/Nexify.png";
 
 const SignUpNew = () => {
   const [loading, setLoading] = useState(false);
@@ -20,18 +31,6 @@ const SignUpNew = () => {
   const dispatch = useDispatch();
 
   const signUpError = useSelector((state) => state.auth?.signUpError);
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -56,11 +55,10 @@ const SignUpNew = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setLoadingText("Signing up...");
+    setLoadingText("Creating your account...");
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -68,13 +66,9 @@ const SignUpNew = () => {
     formData.append("avatar", avatar);
     formData.append("role", "general");
     formData.append("isConsentGiven", "false");
-
     const timeout = setTimeout(() => {
-      setLoadingText(
-        "This is taking longer than usual. Please wait while backend services are getting started."
-      );
+      setLoadingText("Backend waking up — hang tight.");
     }, 5000);
-
     await dispatch(signUpAction(formData, navigate, false, email));
     setLoading(false);
     clearTimeout(timeout);
@@ -83,266 +77,281 @@ const SignUpNew = () => {
   const handleDemoLogin = async () => {
     setLoading(true);
     setLoadingText("Signing in as demo user...");
-    
-    // Get demo credentials from environment variables
     const demoEmail = process.env.REACT_APP_DEMO_EMAIL || "";
     const demoPassword = process.env.REACT_APP_DEMO_PASSWORD || "";
-    
     if (!demoEmail || !demoPassword) {
       setLoading(false);
       return;
     }
-    
     const formData = new FormData();
     formData.append("email", demoEmail);
     formData.append("password", demoPassword);
-    
     const timeout = setTimeout(() => {
-      setLoadingText(
-        "This is taking longer than usual. Please wait while backend services are getting started."
-      );
+      setLoadingText("Backend waking up — hang tight.");
     }, 5000);
-    
     await dispatch(signInAction(formData, navigate));
     setLoading(false);
     clearTimeout(timeout);
   };
 
-  const handleClearError = () => {
-    dispatch(clearMessage());
-  };
+  const handleClearError = () => dispatch(clearMessage());
+  const demoReady =
+    process.env.REACT_APP_DEMO_EMAIL && process.env.REACT_APP_DEMO_PASSWORD;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="flex min-h-screen">
-        {/* Left Side - Image/Pattern */}
-        <div className="hidden lg:block lg:w-1/2 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500"></div>
-          <div className="absolute inset-0 bg-black opacity-10"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="max-w-md text-center px-8">
-              <h2 className="text-4xl font-bold text-white mb-4">
-                Join our community
-              </h2>
-              <p className="text-xl text-blue-100">
-                Create an account to connect, share, and grow with Nexify
-              </p>
-            </div>
+    <div className="nx-shell relative flex min-h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-0 bg-aurora-radial opacity-80" />
+
+      {/* Left marketing panel */}
+      <aside className="relative hidden w-1/2 lg:block">
+        <div
+          className="absolute inset-0 animate-aurora-pan"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #6366F1 100%)",
+            backgroundSize: "200% 200%",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.28) 1px, transparent 0)",
+            backgroundSize: "22px 22px",
+            maskImage:
+              "radial-gradient(ellipse at center, black 50%, transparent 85%)",
+          }}
+        />
+        <div className="relative z-10 flex h-full flex-col justify-between p-14 text-white">
+          <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-white/80">
+            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse-soft" />
+            Join Nexify
           </div>
-          {/* Pattern overlay */}
-          <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-            <defs>
-              <pattern id="pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                <circle cx="1" cy="1" r="1" fill="white" fillOpacity="0.1" />
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#pattern)" />
-          </svg>
-        </div>
-
-        {/* Right Side - Form */}
-        <div className="flex w-full items-center justify-center px-6 lg:w-1/2">
-          <div className="w-full max-w-md">
-            <div className="text-center">
-              <img className="mx-auto h-12 w-auto" src={Logo} alt="Nexify" />
-              <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                Create your account
-              </h2>
-              <p className="mt-2 text-sm text-gray-600">
-                Join Nexify and start connecting today
-              </p>
-            </div>
-
-            {signUpError &&
-              Array.isArray(signUpError) &&
-              signUpError.map((err, i) => (
-                <div
-                  className="mt-6 relative rounded-lg bg-red-50 border border-red-200 p-4"
-                  key={i}
-                >
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="ml-3 flex-1">
-                      <p className="text-sm text-red-700">{err}</p>
-                    </div>
-                    <button
-                      className="ml-auto text-red-400 hover:text-red-500"
-                      onClick={handleClearError}
-                    >
-                      <RxCross1 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
+          <div className="max-w-lg">
+            <h2 className="text-balance font-display text-5xl font-bold leading-[1.05]">
+              A quieter internet, built around your people.
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-white/85">
+              Claim your corner, follow the communities that feel like home, and
+              share on your own terms.
+            </p>
+            <ul className="mt-10 space-y-3 text-white/90">
+              {[
+                "Context-aware sign-in keeps your account yours.",
+                "Smart moderation, not loud outrage.",
+                "Communities that actually respond to you.",
+              ].map((line) => (
+                <li key={line} className="flex items-start gap-3">
+                  <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white" />
+                  <span>{line}</span>
+                </li>
               ))}
-
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit} autoComplete="off">
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                    Username
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={name}
-                      onChange={handleNameChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
-                      placeholder="Choose a username"
-                      required
-                      autoComplete="new-password"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email address
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <input
-                      id="email"
-                      name="email"
-                      value={email}
-                      onChange={handleEmailChange}
-                      type="email"
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
-                      placeholder="Enter your email"
-                      required
-                      autoComplete="new-password"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={handlePasswordChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition duration-150"
-                      placeholder="Create a password"
-                      required
-                      autoComplete="new-password"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 mb-2">
-                    Profile Photo (Optional)
-                  </label>
-                  <label
-                    htmlFor="avatar"
-                    className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition duration-150"
-                  >
-                    <div className="text-center">
-                      <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      <p className="mt-2 text-sm text-gray-600">
-                        {avatar ? avatar.name : "Click to upload profile photo"}
-                      </p>
-                      <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-                    </div>
-                    <input
-                      id="avatar"
-                      type="file"
-                      className="hidden"
-                      name="avatar"
-                      accept="image/*"
-                      onChange={handleAvatarChange}
-                      autoComplete="off"
-                    />
-                  </label>
-                  {avatarError && (
-                    <p className="mt-2 text-sm text-red-600">{avatarError}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ${
-                    loading ? "opacity-75 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {loading && !loadingText.includes("demo") ? (
-                    <ButtonLoadingSpinner loadingText={loadingText} />
-                  ) : (
-                    "Sign up"
-                  )}
-                </button>
-
-                {process.env.REACT_APP_DEMO_EMAIL && process.env.REACT_APP_DEMO_PASSWORD && (
-                  <button
-                    type="button"
-                    onClick={handleDemoLogin}
-                    disabled={loading}
-                    className={`w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ${
-                      loading ? "opacity-75 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    {loading && loadingText.includes("demo") ? (
-                      <ButtonLoadingSpinner loadingText={loadingText} />
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Try Demo Account
-                      </>
-                    )}
-                  </button>
-                )}
-              </div>
-
-              <div className="text-center">
-                <span className="text-sm text-gray-600">
-                  Already have an account?{" "}
-                  <Link to="/signin" className="font-medium text-blue-600 hover:text-blue-500">
-                    Sign in
-                  </Link>
-                </span>
-              </div>
-            </form>
+            </ul>
           </div>
+          <p className="text-sm text-white/70">
+            © Nexify — built with care.
+          </p>
+        </div>
+      </aside>
+
+      {/* Right form */}
+      <div className="relative z-10 flex w-full flex-col px-6 py-10 sm:px-10 lg:w-1/2 lg:px-16">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 self-start"
+          aria-label="Nexify home"
+        >
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-aurora shadow-aurora">
+            <HiOutlineSparkles className="text-white" />
+          </div>
+          <span className="nx-wordmark text-2xl font-bold">Nexify</span>
+        </Link>
+
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
+          <div className="animate-fade-up">
+            <span className="nx-chip-aurora mb-5">
+              <HiOutlineSparkles className="text-sm" />
+              Start free
+            </span>
+            <h1 className="text-display-md text-balance">
+              Create your <span className="nx-wordmark">Nexify</span> profile.
+            </h1>
+            <p className="mt-3 text-ink-muted">
+              One account. Every community. No noise you didn't ask for.
+            </p>
+          </div>
+
+          {signUpError &&
+            Array.isArray(signUpError) &&
+            signUpError.map((err, i) => (
+              <div
+                key={i}
+                className="animate-fade-in mt-5 flex items-start gap-3 rounded-md border border-danger/20 bg-danger/5 p-3.5 text-sm"
+              >
+                <div className="mt-0.5 h-2 w-2 flex-shrink-0 rounded-full bg-danger" />
+                <p className="flex-1 text-danger">{err}</p>
+                <button
+                  onClick={handleClearError}
+                  className="rounded p-1 text-danger/70 hover:bg-danger/10 hover:text-danger"
+                  aria-label="Dismiss"
+                >
+                  <RxCross1 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+
+          <form
+            className="mt-8 space-y-5 stagger-fade"
+            onSubmit={handleSubmit}
+            autoComplete="off"
+          >
+            <div>
+              <label htmlFor="name" className="nx-label">
+                Username
+              </label>
+              <div className="nx-input-wrapper">
+                <span className="nx-input-icon">
+                  <HiOutlineUser className="h-4 w-4" />
+                </span>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="nx-input"
+                  placeholder="Choose a username"
+                  required
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="email" className="nx-label">
+                Email
+              </label>
+              <div className="nx-input-wrapper">
+                <span className="nx-input-icon">
+                  <HiOutlineMail className="h-4 w-4" />
+                </span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="nx-input"
+                  placeholder="you@example.com"
+                  required
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="nx-label">
+                Password
+              </label>
+              <div className="nx-input-wrapper">
+                <span className="nx-input-icon">
+                  <HiOutlineLockClosed className="h-4 w-4" />
+                </span>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="nx-input"
+                  placeholder="At least 8 characters"
+                  required
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                />
+              </div>
+            </div>
+
+            <div>
+              <span className="nx-label">Profile photo (optional)</span>
+              <label
+                htmlFor="avatar"
+                className="group flex cursor-pointer items-center gap-4 rounded-md border border-dashed border-line bg-surface-muted p-4 transition-all duration-200 hover:border-brand hover:bg-brand/5"
+              >
+                <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-md bg-white text-ink-subtle group-hover:text-brand-700 shadow-xs">
+                  <HiOutlinePhotograph className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-ink">
+                    {avatar ? avatar.name : "Click to upload"}
+                  </p>
+                  <p className="text-xs text-ink-subtle">PNG or JPG, up to 10MB</p>
+                </div>
+                <input
+                  id="avatar"
+                  type="file"
+                  className="hidden"
+                  name="avatar"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  autoComplete="off"
+                />
+              </label>
+              {avatarError && (
+                <p className="mt-2 text-xs text-danger">{avatarError}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="nx-btn-primary w-full py-3 text-sm"
+            >
+              {loading && !loadingText.toLowerCase().includes("demo") ? (
+                <ButtonLoadingSpinner loadingText={loadingText} />
+              ) : (
+                <>
+                  Create account <HiArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+
+            {demoReady && (
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={loading}
+                className="nx-btn-secondary w-full py-3"
+              >
+                {loading && loadingText.toLowerCase().includes("demo") ? (
+                  <ButtonLoadingSpinner loadingText={loadingText} />
+                ) : (
+                  <>
+                    <HiOutlineSparkles className="h-4 w-4" />
+                    Try demo account
+                  </>
+                )}
+              </button>
+            )}
+
+            <p className="pt-1 text-center text-sm text-ink-muted">
+              Already on Nexify?{" "}
+              <Link
+                to="/signin"
+                className="font-semibold text-brand-700 underline-offset-4 hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
     </div>

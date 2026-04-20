@@ -4,7 +4,8 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import {
   HiOutlineChatBubbleOvalLeft,
-  HiOutlineArchiveBox,
+  HiOutlineTrash,
+  HiOutlineEllipsisHorizontal,
 } from "react-icons/hi2";
 import DeleteModal from "../modals/DeleteModal";
 import Like from "./Like";
@@ -21,132 +22,149 @@ const Post = ({ post }) => {
     post;
 
   const [showModal, setShowModal] = useState(false);
-  const toggleModal = (value) => {
-    setShowModal(value);
-  };
+  const toggleModal = (value) => setShowModal(value);
 
-  // Handle case where user or community is null
   if (!user || !community) {
     console.error("Post missing user or community data:", post);
-    return null; // Don't render the post if critical data is missing
+    return null;
   }
 
+  const openPost = () =>
+    navigate(`/post/${post._id}`, { state: { from: location.pathname } });
+
+  const isMod = user.role === "moderator";
+
   return (
-    <div className="border rounded bg-white p-4 m-2 hover:shadow-lg duration-300">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img
-            className="rounded-full overflow-hidden w-12 h-12 object-cover"
-            src={user.avatar || "/images/default-avatar.svg"}
-            alt="user avatar"
-            loading="lazy"
-          />
+    <article className="nx-card nx-card-hover animate-fade-up p-5">
+      {/* header */}
+      <header className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img
+              className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow-xs"
+              src={user.avatar || "/images/default-avatar.svg"}
+              alt={user.name}
+              loading="lazy"
+            />
+            {isMod && (
+              <span className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-danger text-[8px] font-bold text-white ring-2 ring-white">
+                M
+              </span>
+            )}
+          </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {userData._id === user._id ? (
-                <Link to="/profile" className={`font-semibold text-lg capitalize ${user.role === "moderator" ? "text-red-600" : ""}`}>
+                <Link
+                  to="/profile"
+                  className={`font-semibold capitalize ${
+                    isMod ? "text-danger" : "text-ink"
+                  } hover:text-brand-700`}
+                >
                   {user.name}
                 </Link>
               ) : (
                 <Link
                   to={`/user/${user._id}`}
-                  className={`font-semibold text-lg capitalize ${user.role === "moderator" ? "text-red-600" : ""}`}
+                  className={`font-semibold capitalize ${
+                    isMod ? "text-danger" : "text-ink"
+                  } hover:text-brand-700`}
                 >
                   {user.name}
                 </Link>
               )}
               {user.isVerified && <VerifiedBadge size="sm" />}
-              {user.role === "moderator" && (
-                <span className="ml-1 bg-red-100 text-red-800 px-1.5 py-0.5 rounded-full text-xs font-medium">
-                  MOD
+              {isMod && (
+                <span className="nx-chip border-danger/20 bg-danger/5 text-danger">
+                  Mod
                 </span>
               )}
             </div>
-            <Link
-              to={`/community/${community.name}`}
-              className="text-sm text-gray-500"
-            >
-              {community.name}
-            </Link>
+            <div className="flex items-center gap-1.5 text-xs text-ink-subtle">
+              <Link
+                to={`/community/${community.name}`}
+                className="font-medium hover:text-brand-700"
+              >
+                {community.name}
+              </Link>
+              <span>·</span>
+              <span>{createdAt}</span>
+            </div>
           </div>
         </div>
-        <p className="text-sm text-gray-500">{createdAt}</p>
+
+        {userData?._id === post.user._id && (
+          <Tooltip text="Delete post">
+            <button
+              onClick={() => toggleModal(true)}
+              className="grid h-8 w-8 place-items-center rounded-full text-ink-subtle transition-colors hover:bg-danger/5 hover:text-danger"
+              aria-label="Delete post"
+            >
+              <HiOutlineTrash className="h-4 w-4" />
+            </button>
+          </Tooltip>
+        )}
+      </header>
+
+      {/* body */}
+      <div
+        onClick={openPost}
+        className="mt-4 cursor-pointer break-words text-[15px] leading-relaxed text-ink"
+      >
+        {content}
       </div>
-      <div>
-        <p
-          onClick={() => {
-            navigate(`/post/${post._id}`, {
-              state: { from: location.pathname },
-            });
-          }}
-          className="my-2 cursor-pointer break-words"
-        >
-          {content}
-        </p>
-        <div className="mt-4">
-          {fileUrl && fileType === "image" ? (
+
+      {/* media */}
+      {fileUrl && (
+        <div className="mt-4 overflow-hidden rounded-md border border-line-subtle bg-surface-muted">
+          {fileType === "image" ? (
             <PhotoProvider
               overlayRender={() => (
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-10 text-white px-3 py-2">
-                  <p className="text-xs">{user.name}</p>
-                  <p className="text-xs">{community.name}</p>
-                  <p className="text-xs">{createdAt}</p>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-xs text-white backdrop-blur-sm">
+                  <p>{user.name}</p>
+                  <p>{community.name} · {createdAt}</p>
                 </div>
               )}
             >
               <PhotoView src={fileUrl}>
-                <div className="w-full aspect-w-1 aspect-h-1">
-                  <img
-                    src={fileUrl}
-                    alt={content}
-                    loading="lazy"
-                    className="cursor-pointer object-cover rounded-md"
-                  />
-                </div>
+                <img
+                  src={fileUrl}
+                  alt={content}
+                  loading="lazy"
+                  className="w-full cursor-zoom-in object-cover transition-transform duration-500 hover:scale-[1.02]"
+                />
               </PhotoView>
             </PhotoProvider>
           ) : (
-            fileUrl && (
-              <div className="w-full aspect-w-16 aspect-h-9">
-                <video
-                  className="block mx-auto rounded-md focus:outline-none"
-                  src={fileUrl}
-                  controls
-                />
-              </div>
-            )
+            <video
+              src={fileUrl}
+              controls
+              className="block w-full rounded-md focus:outline-none"
+            />
           )}
         </div>
-      </div>
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center gap-4">
-          <Like post={post} />
+      )}
 
+      {/* actions */}
+      <footer className="mt-4 flex items-center justify-between border-t border-line-subtle pt-3">
+        <div className="flex items-center gap-1">
+          <Like post={post} />
           <button
-            className="flex items-center text-lg gap-1"
-            onClick={() => {
-              navigate(`/post/${post._id}`, {
-                state: { from: location.pathname },
-              });
-            }}
+            onClick={openPost}
+            className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:bg-surface-hover hover:text-brand-700"
           >
-            <HiOutlineChatBubbleOvalLeft className="text-2xl" />
-            {comments.length}
+            <HiOutlineChatBubbleOvalLeft className="h-5 w-5" />
+            <span>{comments.length}</span>
           </button>
         </div>
-        <div className="flex items-center gap-2">
-          {userData?._id === post.user._id && (
-            <Tooltip text="Delete post">
-              <button
-                onClick={() => toggleModal(true)}
-                className="text-red-500 text-2xl"
-              >
-                <HiOutlineArchiveBox />
-              </button>
-            </Tooltip>
-          )}
-        </div>
-      </div>
+        <button
+          onClick={openPost}
+          className="grid h-8 w-8 place-items-center rounded-full text-ink-subtle transition-colors hover:bg-surface-hover hover:text-ink"
+          aria-label="More"
+        >
+          <HiOutlineEllipsisHorizontal className="h-5 w-5" />
+        </button>
+      </footer>
 
       {showModal && (
         <DeleteModal
@@ -156,7 +174,7 @@ const Post = ({ post }) => {
           prevPath={location.pathname}
         />
       )}
-    </div>
+    </article>
   );
 };
 

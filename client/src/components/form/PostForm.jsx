@@ -145,34 +145,44 @@ const PostForm = ({ communityId, communityName }) => {
         confirmationToken={confirmationToken}
       />
 
-      <form onSubmit={handleSubmit} className="border-b bg-white p-6">
-        <div className="mb-4">
+      <form
+        onSubmit={handleSubmit}
+        className="nx-card relative overflow-hidden p-5 animate-fade-up"
+      >
+        <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-aurora-soft opacity-60 blur-2xl" />
+
+        <div className="relative">
           <label
             htmlFor="content"
-            className="mb-2 block font-bold text-gray-700"
+            className="mb-2 block text-sm font-semibold text-ink"
           >
-            Share something with your community:
+            Share something with your community
           </label>
           <textarea
-            className="w-full resize-none rounded-md border p-2"
+            className="w-full resize-none rounded-md border border-line bg-surface-muted px-3.5 py-3 text-sm text-ink placeholder-ink-faint transition-all duration-200 focus:border-brand focus:bg-surface focus:outline-none focus:ring-4 focus:ring-brand/10"
             name="content"
             id="content"
+            rows={4}
+            placeholder={`What's on your mind${communityName ? `, in ${communityName}` : ""}?`}
             value={formData.content}
             onChange={handleContentChange}
             minLength={10}
             maxLength={3000}
             required
           />
+          <div className="mt-1 flex justify-end text-xs text-ink-faint">
+            {formData.content.length}/3000
+          </div>
         </div>
 
-        <div className="mb-4">
+        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-3">
           <label
             htmlFor="file"
-            className="mx-auto mt-6 flex cursor-pointer items-center rounded-lg border-2 border-dashed bg-white px-3 py-3 text-center"
+            className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-ink-muted transition-all hover:border-brand/40 hover:bg-brand/5 hover:text-brand-700"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-300"
+              className="h-4 w-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -184,7 +194,7 @@ const PostForm = ({ communityId, communityName }) => {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
               />
             </svg>
-            <h2 className="mx-3 text-gray-400">Photo / Video</h2>
+            Photo / Video
             <input
               name="file"
               type="file"
@@ -195,47 +205,55 @@ const PostForm = ({ communityId, communityName }) => {
             />
           </label>
 
-          {formData.file && (
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-gray-500">{formData.file.name}</p>
-              <button
-                type="button"
-                onClick={handleRemoveFile}
-                className="text-red-500 hover:text-red-700"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          {formData.error && <p className="text-red-500">{formData.error}</p>}
+          <button
+            className={`nx-btn-primary px-5 py-2 text-sm transition-opacity ${
+              !formData.content && !formData.file
+                ? "pointer-events-none opacity-50"
+                : "opacity-100"
+            }`}
+            type="submit"
+            disabled={formData.loading || (!formData.content && !formData.file)}
+          >
+            {formData.loading ? (
+              <>
+                <span className="loader" /> Posting…
+              </>
+            ) : (
+              "Post"
+            )}
+          </button>
         </div>
 
-        <button
-          className={`rounded bg-primary px-4 py-1 text-sm text-white hover:bg-blue-700 ${
-            formData.loading ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          type="submit"
-          disabled={formData.loading || (!formData.content && !formData.file)}
-          style={{
-            display: formData.content || formData.file ? "block" : "none",
-          }}
-        >
-          {formData.loading ? "Processing..." : "Create post"}
-        </button>
+        {formData.file && (
+          <div className="relative mt-3 flex items-center justify-between rounded-md border border-line-subtle bg-surface-muted px-3 py-2">
+            <p className="truncate text-xs text-ink-muted">{formData.file.name}</p>
+            <button
+              type="button"
+              onClick={handleRemoveFile}
+              className="rounded-full p-1 text-ink-subtle hover:bg-danger/10 hover:text-danger"
+              aria-label="Remove file"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {formData.error && (
+          <p className="relative mt-2 text-xs text-danger">{formData.error}</p>
+        )}
       </form>
     </>
   );
