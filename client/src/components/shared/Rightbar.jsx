@@ -34,12 +34,15 @@ const Rightbar = () => {
   const recommendedUsers = useSelector((state) => state.user?.publicUsers);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getNotJoinedCommunitiesAction());
-      setNotJoinedCommunitiesFetched(true);
-      await dispatch(getPublicUsersAction());
-    };
-    fetchData().then(() => setPublicUsersFetched(true));
+    // Fire both in parallel — these are independent
+    Promise.all([
+      dispatch(getNotJoinedCommunitiesAction()).finally(() =>
+        setNotJoinedCommunitiesFetched(true)
+      ),
+      dispatch(getPublicUsersAction()).finally(() =>
+        setPublicUsersFetched(true)
+      ),
+    ]);
   }, [dispatch]);
 
   const notJoinedCommunities = useSelector(

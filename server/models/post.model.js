@@ -93,6 +93,9 @@ const postSchema = new Schema(
 );
 
 postSchema.index({ content: "text" });
+postSchema.index({ community: 1, createdAt: -1 });
+postSchema.index({ user: 1, createdAt: -1 });
+postSchema.index({ createdAt: -1 });
 
 postSchema.pre("remove", async function (next) {
   try {

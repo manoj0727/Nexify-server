@@ -114,7 +114,7 @@ const Search = () => {
         >
           {loading && (
             <div className="flex items-center justify-center gap-2 py-3 px-4 text-sm text-ink-muted">
-              <MoonLoader size={16} color={"#8B5CF6"} />
+              <MoonLoader size={16} color={"#FA8112"} />
               Searching…
             </div>
           )}

@@ -87,20 +87,24 @@ const SignIn = () => {
           className="inline-flex items-center gap-2 self-start"
           aria-label="Nexify home"
         >
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-aurora shadow-aurora">
-            <HiOutlineSparkles className="text-white" />
+          <div
+            className="grid h-9 w-9 place-items-center rounded-xl shadow-ember"
+            style={{ backgroundColor: "#222222" }}
+          >
+            <HiOutlineSparkles style={{ color: "#FA8112" }} />
           </div>
-          <span className="nx-wordmark text-2xl font-bold">Nexify</span>
+          <span className="nx-wordmark nx-brand-lockup text-2xl">Nexify</span>
         </Link>
 
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
           <div className="animate-fade-up">
-            <span className="nx-chip-aurora mb-5">
+            <span className="nx-chip-ember mb-5">
               <HiOutlineSparkles className="text-sm" />
               Welcome back
             </span>
             <h1 className="text-display-md text-balance">
-              Sign in to keep the <span className="nx-wordmark">conversation</span> going.
+              Sign in to keep the{" "}
+              <span className="nx-underline">conversation</span> going.
             </h1>
             <p className="mt-3 text-ink-muted">
               Your communities, posts, and people — right where you left them.
@@ -257,74 +261,89 @@ const SignIn = () => {
         </div>
       </div>
 
-      {/* Right: marketing panel */}
-      <aside className="relative hidden w-1/2 lg:block">
+      {/* Right: editorial marketing panel */}
+      <aside
+        className="relative hidden w-1/2 lg:block"
+        style={{ backgroundColor: "#222222" }}
+      >
+        {/* warm orange accent blob */}
         <div
-          className="absolute inset-0 animate-aurora-pan"
-          style={{
-            backgroundImage:
-              "linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #EC4899 100%)",
-            backgroundSize: "200% 200%",
-          }}
+          className="absolute -left-24 top-1/3 h-[520px] w-[520px] rounded-full opacity-80 blur-3xl"
+          style={{ backgroundColor: "#FA8112", opacity: 0.35 }}
         />
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 18% 22%, rgba(255,255,255,0.25), transparent 30%), radial-gradient(circle at 82% 78%, rgba(255,255,255,0.18), transparent 35%)",
-          }}
+          className="absolute -right-20 -bottom-20 h-[380px] w-[380px] rounded-full blur-3xl"
+          style={{ backgroundColor: "#F5E7C6", opacity: 0.08 }}
         />
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.28) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(250,243,225,0.22) 1px, transparent 0)",
             backgroundSize: "22px 22px",
             maskImage:
               "radial-gradient(ellipse at center, black 50%, transparent 85%)",
           }}
         />
 
-        <div className="relative z-10 flex h-full flex-col justify-between p-14 text-white">
-          <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-white/80">
-            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse-soft" />
+        <div
+          className="relative z-10 flex h-full flex-col justify-between p-14"
+          style={{ color: "#FAF3E1" }}
+        >
+          <div
+            className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em]"
+            style={{ color: "rgba(250,243,225,0.75)" }}
+          >
+            <span
+              className="h-1.5 w-1.5 rounded-full animate-pulse-soft"
+              style={{ backgroundColor: "#FA8112" }}
+            />
             Live communities
           </div>
 
           <div className="max-w-lg">
             <h2 className="text-balance font-display text-5xl font-bold leading-[1.05]">
-              Where ideas find their people.
+              Where ideas find{" "}
+              <span style={{ color: "#FA8112" }}>their people</span>.
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/85">
+            <p
+              className="mt-5 text-lg leading-relaxed"
+              style={{ color: "rgba(250,243,225,0.78)" }}
+            >
               Nexify brings together thoughtful communities, expressive posts,
               and context-aware trust — so every conversation feels like it
               belongs.
             </p>
 
-            <div className="mt-10 grid grid-cols-3 gap-5 text-sm">
-              <div className="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-md">
-                <div className="font-display text-2xl font-bold">12k+</div>
-                <div className="text-white/75">Members</div>
-              </div>
-              <div className="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-md">
-                <div className="font-display text-2xl font-bold">48</div>
-                <div className="text-white/75">Communities</div>
-              </div>
-              <div className="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-md">
-                <div className="font-display text-2xl font-bold">99.9%</div>
-                <div className="text-white/75">Uptime</div>
-              </div>
+            <div className="mt-10 grid grid-cols-3 gap-4">
+              {[
+                { n: "12k+", l: "Members" },
+                { n: "48", l: "Communities" },
+                { n: "99.9%", l: "Uptime" },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-lg border p-4"
+                  style={{
+                    borderColor: "rgba(250,243,225,0.12)",
+                    backgroundColor: "rgba(250,243,225,0.04)",
+                  }}
+                >
+                  <div className="font-display text-2xl font-bold">{s.n}</div>
+                  <div style={{ color: "rgba(250,243,225,0.6)" }} className="text-sm">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <figure className="max-w-md text-sm text-white/80">
-            <p className="italic text-white/90">
+          <figure className="max-w-md text-sm">
+            <p className="italic" style={{ color: "rgba(250,243,225,0.9)" }}>
               "The calmest social feed I've used in years. It just gets out of
               the way."
             </p>
-            <figcaption className="mt-2 font-medium text-white">
-              — Early user
-            </figcaption>
+            <figcaption className="mt-2 font-medium">— Early user</figcaption>
           </figure>
         </div>
       </aside>

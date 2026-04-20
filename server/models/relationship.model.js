@@ -14,4 +14,7 @@ const relationshipSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+relationshipSchema.index({ follower: 1, following: 1 }, { unique: true });
+relationshipSchema.index({ following: 1 });
+
 module.exports = mongoose.model("Relationship", relationshipSchema);

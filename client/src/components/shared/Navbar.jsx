@@ -51,10 +51,13 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
             className="flex items-center gap-2"
             aria-label="Nexify home"
           >
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-aurora shadow-aurora">
-              <HiOutlineSparkles className="text-white" />
+            <div
+              className="grid h-9 w-9 place-items-center rounded-xl shadow-ember"
+              style={{ backgroundColor: "#222222" }}
+            >
+              <HiOutlineSparkles style={{ color: "#FA8112" }} />
             </div>
-            <span className="nx-wordmark hidden text-xl font-bold sm:inline-block">
+            <span className="nx-wordmark nx-brand-lockup hidden text-xl sm:inline-block">
               Nexify
             </span>
           </Link>
@@ -98,10 +101,10 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
               >
                 <div className="relative p-5 pb-4">
                   <div
-                    className="absolute inset-0 opacity-70"
+                    className="absolute inset-0 opacity-80"
                     style={{
                       backgroundImage:
-                        "radial-gradient(circle at 30% 10%, rgba(139,92,246,0.18), transparent 60%)",
+                        "radial-gradient(circle at 30% 10%, rgba(250,129,18,0.18), transparent 60%)",
                     }}
                   />
                   <div className="relative flex items-center gap-3">

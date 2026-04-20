@@ -221,56 +221,35 @@ const getPosts = async (req, res) => {
     const userId = req.userId;
     const { limit = 10, skip = 0 } = req.query;
 
-    const communities = await Community.find({
-      members: userId,
-    });
+    // distinct returns just IDs — way lighter than full Community docs
+    const communityIds = await Community.find({ members: userId }).distinct(
+      "_id"
+    );
 
-    const communityIds = communities.map((community) => community._id);
+    const filter = { community: { $in: communityIds } };
 
-    const posts = await Post.find({
-      community: {
-        $in: communityIds,
-      },
-    })
-      .sort({
-        createdAt: -1,
-      })
-      .populate("user", "name avatar isVerified role")
-      .populate("community", "name")
-      .skip(parseInt(skip))
-      .limit(parseInt(limit))
-      .lean();
+    // parallel: page of posts + total count
+    const [posts, totalPosts] = await Promise.all([
+      Post.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(parseInt(skip))
+        .limit(parseInt(limit))
+        .populate("user", "name avatar isVerified role")
+        .populate("community", "name")
+        .lean(),
+      Post.countDocuments(filter),
+    ]);
 
-    // Filter out posts where user data is null (deleted users)
-    const validPosts = posts.filter((post) => {
-      if (!post.user) {
-        console.warn(`Post ${post._id} has null user, skipping`);
-        return false;
-      }
-      return true;
-    });
+    const formattedPosts = posts
+      .filter((p) => p.user)
+      .map((p) => ({ ...p, createdAt: dayjs(p.createdAt).fromNow() }));
 
-    const formattedPosts = validPosts.map((post) => ({
-      ...post,
-      createdAt: dayjs(post.createdAt).fromNow(),
-    }));
-
-    const totalPosts = await Post.countDocuments({
-      community: {
-        $in: communityIds,
-      },
-    });
-
-    res.status(200).json({
-      formattedPosts,
-      totalPosts,
-    });
+    res.status(200).json({ formattedPosts, totalPosts });
   } catch (error) {
     console.error("Error in getPosts:", error);
-    res.status(500).json({
-      message: "Error retrieving posts",
-      error: error.message
-    });
+    res
+      .status(500)
+      .json({ message: "Error retrieving posts", error: error.message });
   }
 };
 
@@ -287,7 +266,7 @@ const getCommunityPosts = async (req, res) => {
 
     const { limit = 10, skip = 0 } = req.query;
 
-    const isMember = await Community.findOne({
+    const isMember = await Community.exists({
       _id: communityId,
       members: userId,
     });
@@ -298,44 +277,25 @@ const getCommunityPosts = async (req, res) => {
       });
     }
 
-    const posts = await Post.find({
-      community: communityId,
-    })
-      .sort({
-        createdAt: -1,
-      })
-      .populate("user", "name avatar isVerified role")
-      .populate("community", "name")
-      .skip(parseInt(skip))
-      .limit(parseInt(limit))
-      .lean();
+    const filter = { community: communityId };
+    const [posts, totalCommunityPosts] = await Promise.all([
+      Post.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(parseInt(skip))
+        .limit(parseInt(limit))
+        .populate("user", "name avatar isVerified role")
+        .populate("community", "name")
+        .lean(),
+      Post.countDocuments(filter),
+    ]);
 
-    // Filter out posts where user data is null (deleted users)
-    const validPosts = posts.filter((post) => {
-      if (!post.user) {
-        console.warn(`Post ${post._id} has null user, skipping`);
-        return false;
-      }
-      return true;
-    });
+    const formattedPosts = posts
+      .filter((p) => p.user)
+      .map((p) => ({ ...p, createdAt: dayjs(p.createdAt).fromNow() }));
 
-    const formattedPosts = validPosts.map((post) => ({
-      ...post,
-      createdAt: dayjs(post.createdAt).fromNow(),
-    }));
-
-    const totalCommunityPosts = await Post.countDocuments({
-      community: communityId,
-    });
-
-    res.status(200).json({
-      formattedPosts,
-      totalCommunityPosts,
-    });
+    res.status(200).json({ formattedPosts, totalCommunityPosts });
   } catch (error) {
-    res.status(500).json({
-      message: "Error retrieving posts",
-    });
+    res.status(500).json({ message: "Error retrieving posts" });
   }
 };
 

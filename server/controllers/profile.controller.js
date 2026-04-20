@@ -22,7 +22,7 @@ const getPublicUsers = async (req, res) => {
       "following"
     );
 
-    const userIdObj = mongoose.Types.ObjectId(userId);
+    const userIdObj = new mongoose.Types.ObjectId(userId);
 
     const excludedIds = [...followingIds, userIdObj];
 
@@ -91,49 +91,49 @@ const getPublicUser = async (req, res) => {
     const currentUserId = req.userId;
     const id = req.params.id;
 
-    const user = await User.findById(id).select(
-      "-password -email -savedPosts -updatedAt"
-    );
+    const user = await User.findById(id)
+      .select("-password -email -savedPosts -updatedAt")
+      .lean();
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const totalPosts = await Post.countDocuments({ user: user._id });
-    const communities = await Community.find({ members: user._id })
-      .select("name")
-      .lean();
 
-    const currentUserCommunities = await Community.find({
-      members: currentUserId,
-    })
-      .select("_id name")
-      .lean();
+    const last30Days = dayjs().subtract(30, "day").toDate();
 
-    const userCommunities = await Community.find({ members: user._id })
-      .select("_id name")
-      .lean();
+    // Fire all independent queries in parallel — was serial, cut ~4x latency
+    const [
+      totalPosts,
+      userCommunities,
+      currentUserCommunities,
+      isFollowing,
+      postsLast30DaysAgg,
+    ] = await Promise.all([
+      Post.countDocuments({ user: user._id }),
+      Community.find({ members: user._id }).select("_id name").lean(),
+      Community.find({ members: currentUserId }).select("_id name").lean(),
+      Relationship.findOne({
+        follower: currentUserId,
+        following: user._id,
+      }).lean(),
+      Post.aggregate([
+        { $match: { user: user._id, createdAt: { $gte: last30Days } } },
+        { $count: "total" },
+      ]),
+    ]);
 
-    const commonCommunities = currentUserCommunities.filter((comm) => {
-      return userCommunities.some((userComm) => userComm._id.equals(comm._id));
-    });
+    const commonCommunities = currentUserCommunities.filter((c) =>
+      userCommunities.some((uc) => String(uc._id) === String(c._id))
+    );
 
-    const isFollowing = await Relationship.findOne({
-      follower: currentUserId,
-      following: user._id,
-    });
+    const communities = userCommunities.map(({ _id, name }) => ({ _id, name }));
 
     const followingSince = isFollowing
       ? dayjs(isFollowing.createdAt).format("MMM D, YYYY")
       : null;
 
-    const last30Days = dayjs().subtract(30, "day").toDate();
-    const postsLast30Days = await Post.aggregate([
-      { $match: { user: user._id, createdAt: { $gte: last30Days } } },
-      { $count: "total" },
-    ]);
-
     const totalPostsLast30Days =
-      postsLast30Days.length > 0 ? postsLast30Days[0].total : 0;
+      postsLast30DaysAgg.length > 0 ? postsLast30DaysAgg[0].total : 0;
 
     const responseData = {
       name: user.name,

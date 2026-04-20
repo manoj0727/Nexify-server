@@ -53,10 +53,10 @@ const PrivateRoute = ({ userData }) => {
     <div className="nx-shell relative scroll-smooth">
       {/* ambient backdrop */}
       <div
-        className="pointer-events-none fixed inset-0 -z-10 opacity-70"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-80"
         style={{
           backgroundImage:
-            "radial-gradient(900px circle at 10% -10%, rgba(139,92,246,0.08), transparent 60%), radial-gradient(700px circle at 110% 20%, rgba(236,72,153,0.06), transparent 55%)",
+            "radial-gradient(900px circle at 10% -10%, rgba(250,129,18,0.10), transparent 60%), radial-gradient(700px circle at 110% 20%, rgba(245,231,198,0.45), transparent 55%)",
         }}
       />
 

@@ -26,10 +26,7 @@ const NavItem = ({ to, icon: Icon, label, end }) => (
         {isActive && (
           <span
             className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full"
-            style={{
-              backgroundImage:
-                "linear-gradient(180deg, #6366F1, #8B5CF6, #EC4899)",
-            }}
+            style={{ backgroundColor: "#FA8112" }}
           />
         )}
         <Icon
@@ -100,11 +97,8 @@ const Leftbar = ({ showLeftbar }) => {
                   className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-surface-hover hover:text-ink"
                 >
                   <span
-                    className="h-6 w-6 flex-shrink-0 rounded-md text-[10px] font-bold uppercase grid place-items-center text-white"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(135deg, #6366F1, #8B5CF6, #EC4899)",
-                    }}
+                    className="h-6 w-6 flex-shrink-0 rounded-md text-[10px] font-bold uppercase grid place-items-center"
+                    style={{ backgroundColor: "#222222", color: "#FA8112" }}
                   >
                     {c.name?.[0]}
                   </span>

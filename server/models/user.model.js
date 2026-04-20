@@ -125,4 +125,6 @@ const userSchema = new Schema(
 );
 
 userSchema.index({ name: "text" });
+userSchema.index({ role: 1 });
+userSchema.index({ createdAt: -1 });
 module.exports = mongoose.model("User", userSchema);

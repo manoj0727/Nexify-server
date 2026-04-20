@@ -81,5 +81,7 @@ const communitySchema = new Schema(
 );
 
 communitySchema.index({ name: "text" });
+communitySchema.index({ members: 1 });
+communitySchema.index({ moderators: 1 });
 
 module.exports = mongoose.model("Community", communitySchema);

@@ -15,27 +15,34 @@ const OwnProfileCard = ({ user }) => {
 
   return (
     <div className="nx-card relative overflow-hidden animate-fade-up">
-      {/* aurora banner */}
-      <div className="relative h-32 w-full sm:h-40">
+      {/* editorial banner — dark with warm accent */}
+      <div
+        className="relative h-32 w-full overflow-hidden sm:h-40"
+        style={{ backgroundColor: "#222222" }}
+      >
         <div
-          className="absolute inset-0 animate-aurora-pan"
-          style={{
-            backgroundImage:
-              "linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #EC4899 100%)",
-            backgroundSize: "200% 200%",
-          }}
+          className="absolute -left-16 top-4 h-48 w-48 rounded-full blur-3xl"
+          style={{ backgroundColor: "#FA8112", opacity: 0.38 }}
         />
         <div
-          className="absolute inset-0 opacity-50"
+          className="absolute -right-8 -bottom-8 h-40 w-40 rounded-full blur-3xl"
+          style={{ backgroundColor: "#F5E7C6", opacity: 0.1 }}
+        />
+        <div
+          className="absolute inset-0 opacity-25"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.25) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(250,243,225,0.2) 1px, transparent 0)",
             backgroundSize: "18px 18px",
           }}
         />
         <button
           onClick={() => setIsModalOpen(true)}
-          className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-white/30"
+          className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold backdrop-blur-md transition-all"
+          style={{
+            backgroundColor: "rgba(250,243,225,0.15)",
+            color: "#FAF3E1",
+          }}
         >
           <Tooltip text="Edit profile">
             <span className="flex items-center gap-1.5">

@@ -102,53 +102,72 @@ const SignUpNew = () => {
     <div className="nx-shell relative flex min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-0 bg-aurora-radial opacity-80" />
 
-      {/* Left marketing panel */}
-      <aside className="relative hidden w-1/2 lg:block">
+      {/* Left editorial marketing panel */}
+      <aside
+        className="relative hidden w-1/2 lg:block"
+        style={{ backgroundColor: "#222222" }}
+      >
         <div
-          className="absolute inset-0 animate-aurora-pan"
-          style={{
-            backgroundImage:
-              "linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #6366F1 100%)",
-            backgroundSize: "200% 200%",
-          }}
+          className="absolute -right-24 top-1/4 h-[520px] w-[520px] rounded-full blur-3xl"
+          style={{ backgroundColor: "#FA8112", opacity: 0.32 }}
         />
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute -left-24 -bottom-24 h-[360px] w-[360px] rounded-full blur-3xl"
+          style={{ backgroundColor: "#F5E7C6", opacity: 0.08 }}
+        />
+        <div
+          className="absolute inset-0 opacity-25"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.28) 1px, transparent 0)",
+              "radial-gradient(circle at 1px 1px, rgba(250,243,225,0.22) 1px, transparent 0)",
             backgroundSize: "22px 22px",
             maskImage:
               "radial-gradient(ellipse at center, black 50%, transparent 85%)",
           }}
         />
-        <div className="relative z-10 flex h-full flex-col justify-between p-14 text-white">
-          <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-white/80">
-            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse-soft" />
+        <div
+          className="relative z-10 flex h-full flex-col justify-between p-14"
+          style={{ color: "#FAF3E1" }}
+        >
+          <div
+            className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em]"
+            style={{ color: "rgba(250,243,225,0.75)" }}
+          >
+            <span
+              className="h-1.5 w-1.5 rounded-full animate-pulse-soft"
+              style={{ backgroundColor: "#FA8112" }}
+            />
             Join Nexify
           </div>
           <div className="max-w-lg">
             <h2 className="text-balance font-display text-5xl font-bold leading-[1.05]">
-              A quieter internet, built around your people.
+              A quieter internet, built around{" "}
+              <span style={{ color: "#FA8112" }}>your people</span>.
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/85">
+            <p
+              className="mt-5 text-lg leading-relaxed"
+              style={{ color: "rgba(250,243,225,0.78)" }}
+            >
               Claim your corner, follow the communities that feel like home, and
               share on your own terms.
             </p>
-            <ul className="mt-10 space-y-3 text-white/90">
+            <ul className="mt-10 space-y-3" style={{ color: "rgba(250,243,225,0.9)" }}>
               {[
                 "Context-aware sign-in keeps your account yours.",
                 "Smart moderation, not loud outrage.",
                 "Communities that actually respond to you.",
               ].map((line) => (
                 <li key={line} className="flex items-start gap-3">
-                  <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white" />
+                  <span
+                    className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
+                    style={{ backgroundColor: "#FA8112" }}
+                  />
                   <span>{line}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <p className="text-sm text-white/70">
+          <p className="text-sm" style={{ color: "rgba(250,243,225,0.6)" }}>
             © Nexify — built with care.
           </p>
         </div>
@@ -161,20 +180,24 @@ const SignUpNew = () => {
           className="inline-flex items-center gap-2 self-start"
           aria-label="Nexify home"
         >
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-aurora shadow-aurora">
-            <HiOutlineSparkles className="text-white" />
+          <div
+            className="grid h-9 w-9 place-items-center rounded-xl shadow-ember"
+            style={{ backgroundColor: "#222222" }}
+          >
+            <HiOutlineSparkles style={{ color: "#FA8112" }} />
           </div>
-          <span className="nx-wordmark text-2xl font-bold">Nexify</span>
+          <span className="nx-wordmark nx-brand-lockup text-2xl">Nexify</span>
         </Link>
 
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
           <div className="animate-fade-up">
-            <span className="nx-chip-aurora mb-5">
+            <span className="nx-chip-ember mb-5">
               <HiOutlineSparkles className="text-sm" />
               Start free
             </span>
             <h1 className="text-display-md text-balance">
-              Create your <span className="nx-wordmark">Nexify</span> profile.
+              Create your{" "}
+              <span className="nx-underline">Nexify</span> profile.
             </h1>
             <p className="mt-3 text-ink-muted">
               One account. Every community. No noise you didn't ask for.
