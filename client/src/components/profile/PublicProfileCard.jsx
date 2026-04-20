@@ -1,51 +1,67 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { CiLocationOn } from "react-icons/ci";
+import { HiOutlineMapPin, HiOutlineCalendar } from "react-icons/hi2";
 import VerifiedBadge from "../shared/VerifiedBadge";
+
 const PublicProfileCard = ({ user }) => {
-  const followingSince = new Date(user.followingSince).toLocaleString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const followingSince = user.followingSince
+    ? new Date(user.followingSince).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : null;
+
+  const isMod = user.role === "moderator";
 
   return (
     <Link
       to={`/user/${user._id}`}
-      className="bg-white border rounded-md w-full px-4 py-4 cursor-pointer shadow-2xl shadow-[#f2f5fc]"
+      className="nx-card nx-card-hover block w-full p-4"
     >
-      <div className="flex gap-3">
+      <div className="flex min-w-0 gap-3">
         <img
           src={user.avatar}
-          alt="Avatar"
-          className="w-12 h-12 rounded-full object-cover"
+          alt={user.name}
+          className="h-12 w-12 flex-shrink-0 rounded-full object-cover ring-2 ring-white shadow-xs"
           loading="lazy"
         />
-        <div>
-          <div className="flex items-center gap-1">
-            <h2 className={`font-bold text-base ${
-              user.role === "moderator" ? "text-red-600" : ""
-            }`}>
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <h2
+              className={`truncate font-semibold ${
+                isMod ? "text-danger" : "text-ink"
+              }`}
+            >
               {user.name}
             </h2>
-            {user.isVerified && <VerifiedBadge size="sm" />}
-            {user.role === "moderator" && (
-              <span className="ml-1 bg-red-100 text-red-800 px-1.5 py-0.5 rounded-full text-xs font-medium">
-                MOD
+            {user.isVerified && (
+              <span className="flex-shrink-0">
+                <VerifiedBadge size="sm" />
+              </span>
+            )}
+            {isMod && (
+              <span className="nx-chip flex-shrink-0 border-danger/20 bg-danger/5 text-danger">
+                Mod
               </span>
             )}
           </div>
-          <p className="flex items-center gap-2">
-            <CiLocationOn className="text-lg" />
-            {user.location || "N/A"}
+          <p className="flex min-w-0 items-center gap-1.5 text-sm text-ink-subtle">
+            <HiOutlineMapPin className="h-3.5 w-3.5 flex-shrink-0" />
+            <span className="truncate">{user.location || "—"}</span>
           </p>
         </div>
       </div>
 
-      <div className="mt-3 flex justify-between items-center">
-        <p className="font-semibold text-gray-500">Following Since</p>
-        <p>{followingSince}</p>
-      </div>
+      {followingSince && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line-subtle pt-3 text-xs">
+          <span className="flex items-center gap-1.5 text-ink-subtle">
+            <HiOutlineCalendar className="h-3.5 w-3.5" />
+            Following since
+          </span>
+          <span className="font-medium text-ink">{followingSince}</span>
+        </div>
+      )}
     </Link>
   );
 };

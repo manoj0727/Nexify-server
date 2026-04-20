@@ -1,5 +1,9 @@
 import { useNavigate, useLocation } from "react-router";
 import { useMemo } from "react";
+import {
+  HiOutlineChatBubbleOvalLeft,
+  HiOutlineHandThumbUp,
+} from "react-icons/hi2";
 
 const PostOnProfile = ({ post }) => {
   const navigate = useNavigate();
@@ -15,9 +19,9 @@ const PostOnProfile = ({ post }) => {
   }, [fileUrl]);
 
   return (
-    <div
-      className={`bg-white rounded-md p-3 border my-2 cursor-pointer transition-all duration-300 ${
-        isMember ? "hover:shadow-md" : "opacity-50 pointer-events-none"
+    <article
+      className={`nx-card nx-card-hover animate-fade-up min-w-0 cursor-pointer p-4 sm:p-5 ${
+        !isMember ? "pointer-events-none opacity-60" : ""
       }`}
       onClick={() => {
         if (isMember) {
@@ -27,45 +31,48 @@ const PostOnProfile = ({ post }) => {
         }
       }}
     >
-      <div className="flex items-center">
-        <p className="text-sm text-gray-500">
-          Posted in {community.name} on {createdAt}
-        </p>
+      <div className="flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-ink-subtle">
+        <span>Posted in</span>
+        <span className="truncate font-medium text-ink">{community.name}</span>
+        <span>·</span>
+        <span>{createdAt}</span>
       </div>
-      <div className="my-3">
-        {content && <p className="mb-4">{content}</p>}
-        {fileUrl && isImageFile ? (
-          <div className="w-full aspect-w-1 aspect-h-1">
+
+      {content && (
+        <p
+          className="mt-3 break-words text-[15px] leading-relaxed text-ink"
+          style={{ overflowWrap: "anywhere" }}
+        >
+          {content}
+        </p>
+      )}
+
+      {fileUrl && (
+        <div className="mt-3 overflow-hidden rounded-md border border-line-subtle bg-surface-muted">
+          {isImageFile ? (
             <img
-              className="w-full h-full object-cover rounded-md cursor-pointer"
               src={fileUrl}
               alt={content}
               loading="lazy"
+              className="block w-full object-cover"
             />
-          </div>
-        ) : (
-          fileUrl && (
-            <div className="w-full aspect-w-16 aspect-h-9">
-              <video
-                className="w-full h-full object-cover rounded-md cursor-pointer"
-                src={fileUrl}
-                controls
-              />
-            </div>
-          )
-        )}
-        <div className="flex justify-between items-center mt-2">
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500">
-              {comments.length} {comments.length === 1 ? "Comment" : "Comments"}
-            </span>
-            <span className="text-sm text-gray-500">
-              {likes.length} {likes.length === 1 ? "Like" : "Likes"}
-            </span>
-          </div>
+          ) : (
+            <video src={fileUrl} controls className="block w-full" />
+          )}
         </div>
+      )}
+
+      <div className="mt-4 flex items-center gap-5 border-t border-line-subtle pt-3 text-sm text-ink-subtle">
+        <span className="flex items-center gap-1.5">
+          <HiOutlineHandThumbUp className="h-4 w-4" />
+          {likes.length}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <HiOutlineChatBubbleOvalLeft className="h-4 w-4" />
+          {comments.length}
+        </span>
       </div>
-    </div>
+    </article>
   );
 };
 
