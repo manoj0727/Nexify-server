@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import ProfileUpdateModal from "../modals/ProfileUpdateModal";
-import Tooltip from "../shared/Tooltip";
 import VerifiedBadge from "../shared/VerifiedBadge";
 import {
   HiOutlinePencilSquare,
